@@ -9,10 +9,11 @@
 #import "HACLocationManager.h"
 
 @implementation HACLocationManager {
-    CLLocation *oldLocation;
+    CLLocation *_oldLocation;
 }
 
 # pragma mark - Life cycle
+
 + (id) sharedInstance {
     static HACLocationManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
@@ -33,39 +34,13 @@
 # pragma mark - CLLocationManagerDelegate
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     
     // If the status is denied or only granted for when in use, display an alert
     if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted ) {
         
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
-        {
-            NSString *title;
-            title = (status == kCLAuthorizationStatusDenied) ? @"Location services are off" : @"Background location is not enabled";
-            NSString *message = @"To use background location you must turn on 'Always' in the Location Services Settings";
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                                message:message
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Cancel"
-                                                      otherButtonTitles:@"Settings", nil];
-            [alertView setTag:1001];
-            [alertView show];
-            
-        }
-        else{
-            NSString *titles;
-            titles = @"Title";
-            NSString *msg = @"Location services are off. To use location services you must turn on 'Always' in the Location Services Settings from Click on 'Settings' > 'Privacy' > 'Location Services'. Enable the 'Location Services' ('ON')";
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:titles
-                                                                message:msg
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-            
-        }
-        
+        [self dispatchAlertCheckingVersionSystem];
         
     }
     // The user has not enabled any location services. Request background authorization.
@@ -82,8 +57,8 @@
     
     CLLocation * lastLocation = [locations lastObject];
     
-    if (lastLocation.coordinate.latitude == oldLocation.coordinate.latitude &&
-        lastLocation.coordinate.longitude == oldLocation.coordinate.longitude &&
+    if (lastLocation.coordinate.latitude == _oldLocation.coordinate.latitude &&
+        lastLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
         [CLLocationManager authorizationStatus]!=kCLAuthorizationStatusNotDetermined){
         
         [self stopUpdatingLocationNow];
@@ -92,7 +67,7 @@
         
     }
     
-    oldLocation = [locations lastObject];
+    _oldLocation = [locations lastObject];
 }
 
 
@@ -116,50 +91,24 @@
 
 - (void) startUpdatingLocationWithDelegate:(id)delegate{
     
-    if (self.locationManager==nil) {
+    if (self.locationManager==nil)
         self.locationManager = [[CLLocationManager alloc]init];
-    }
-    if (delegate) {
+    
+    if (delegate)
         self.delegate = delegate;
-    }
+    
     
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     
     // If the status is denied or only granted for when in use, display an alert
     if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted ) {
         
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
-        {
-            NSString *title;
-            title = (status == kCLAuthorizationStatusDenied) ? @"Location services are off" : @"Background location is not enabled";
-            NSString *message = @"To use background location you must turn on 'Always' in the Location Services Settings";
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                                message:message
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Cancel"
-                                                      otherButtonTitles:@"Settings", nil];
-            [alertView setTag:1001];
-            [alertView show];
-            
-        }
-        else{
-            NSString *titles;
-            titles = @"Title";
-            NSString *msg = @"Location services are off. To use location services you must turn on 'Always' in the Location Services Settings from Click on 'Settings' > 'Privacy' > 'Location Services'. Enable the 'Location Services' ('ON')";
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:titles
-                                                                message:msg
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-            
-        }
-        
+        [self dispatchAlertCheckingVersionSystem];
         
     }
     // The user has not enabled any location services. Request background authorization.
-    else if (status == kCLAuthorizationStatusNotDetermined) {
+    else if (status == kCLAuthorizationStatusNotDetermined)
+    {
         
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
         {
@@ -233,14 +182,14 @@
 
 -(void)getFullAddressFromLastLocationWithDelegate:(id)delegate{
     
-    if (!oldLocation) {
+    if (!_oldLocation) {
         [self startUpdatingLocationWithDelegate:delegate];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (oldLocation) {
-                [self getAddressFromLocation:oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
+            if (_oldLocation) {
+                [self getAddressFromLocation:_oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
                     
                     if (!error) {
                         [self.delegate didFinishGettingFullAddress:dataReceive];
@@ -286,6 +235,42 @@
         NSLog(@"Error : %@", error);
         completionBlock(nil, error);
     }];
+}
+
+
+-(void)dispatchAlertCheckingVersionSystem{
+    
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
+    {
+        NSString *title;
+        title = (status == kCLAuthorizationStatusDenied) ? @"Location services are off" : @"Background location is not enabled";
+        NSString *message = @"To use background location you must turn on 'Always' in the Location Services Settings";
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                            message:message
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                                  otherButtonTitles:@"Settings", nil];
+        [alertView setTag:1001];
+        [alertView show];
+        
+    }
+    else{
+        NSString *titles;
+        titles = @"Title";
+        NSString *msg = @"Location services are off. To use location services you must turn on 'Always' in the Location Services Settings from Click on 'Settings' > 'Privacy' > 'Location Services'. Enable the 'Location Services' ('ON')";
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:titles
+                                                            message:msg
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        
+    }
+    
 }
 
 @end

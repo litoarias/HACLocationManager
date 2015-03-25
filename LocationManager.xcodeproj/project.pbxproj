@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		416AB4751AC34F4C0028DC4F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 416AB4741AC34F4C0028DC4F /* CoreLocation.framework */; };
 		E3107B841AC2D57B007577F3 /* LocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B831AC2D57B007577F3 /* LocationManagerTests.m */; };
 		E3107B901AC2D6F7007577F3 /* HACLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */; };
 		E3107B9D1AC2DB86007577F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B921AC2DB86007577F3 /* AppDelegate.m */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		416AB4741AC34F4C0028DC4F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E3107B641AC2D57B007577F3 /* LocationManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3107B7D1AC2D57B007577F3 /* LocationManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocationManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3107B821AC2D57B007577F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				416AB4751AC34F4C0028DC4F /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +89,7 @@
 		E3107B661AC2D57B007577F3 /* LocationManager */ = {
 			isa = PBXGroup;
 			children = (
+				416AB4741AC34F4C0028DC4F /* CoreLocation.framework */,
 				E3107B8E1AC2D6F7007577F3 /* HACLocationManager.h */,
 				E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */,
 			);
@@ -430,6 +434,7 @@
 				E3107B891AC2D57B007577F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E3107B8A1AC2D57B007577F3 /* Build configuration list for PBXNativeTarget "LocationManagerTests" */ = {
 			isa = XCConfigurationList;
@@ -438,6 +443,7 @@
 				E3107B8C1AC2D57B007577F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
