@@ -56,7 +56,7 @@
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     
     CLLocation * lastLocation = [locations lastObject];
-    
+    NSLog(@"Llega");
     if (lastLocation.coordinate.latitude == _oldLocation.coordinate.latitude &&
         lastLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
         [CLLocationManager authorizationStatus]!=kCLAuthorizationStatusNotDetermined){

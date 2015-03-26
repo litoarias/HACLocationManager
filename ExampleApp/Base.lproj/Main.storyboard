@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -18,17 +18,66 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FPa-1l-cId">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="16" y="20" width="568" height="274"/>
+                                <connections>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="CbH-hc-3iT"/>
+                                </connections>
                             </mapView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8s1-8f-PdP">
+                                <rect key="frame" x="0.0" y="359" width="600" height="241"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="OKh-qd-231"/>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="wra-Jo-E7l"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Fc-Qu-UAD">
+                                <rect key="frame" x="16" y="315" width="280" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="User location">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapUserLocation:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="gTA-T4-hQ8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bqj-Cg-ru1">
+                                <rect key="frame" x="304" y="315" width="280" height="30"/>
+                                <color key="backgroundColor" red="0.25098040699958801" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Get address">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapGetAddress:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Xbt-xQ-Wji"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="FPa-1l-cId" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="59F-uc-c0J"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="FPa-1l-cId" secondAttribute="trailing" constant="-16" id="6Fc-FB-m9s"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" id="AlV-uU-TTm"/>
-                            <constraint firstItem="FPa-1l-cId" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" id="G7Z-rS-5VB"/>
+                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="4Dy-MN-RVl"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8s1-8f-PdP" secondAttribute="trailing" constant="-16" id="4Gc-IQ-yJz"/>
+                            <constraint firstItem="FPa-1l-cId" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="59F-uc-c0J"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="FPa-1l-cId" secondAttribute="trailing" id="6Fc-FB-m9s"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="306" id="AlV-uU-TTm"/>
+                            <constraint firstItem="FPa-1l-cId" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" constant="20" id="G7Z-rS-5VB"/>
+                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="GnR-t0-Psp"/>
+                            <constraint firstItem="bqj-Cg-ru1" firstAttribute="width" secondItem="3Fc-Qu-UAD" secondAttribute="width" id="LPw-28-Beo"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="bqj-Cg-ru1" secondAttribute="bottom" constant="14" id="NMN-C9-BWt"/>
+                            <constraint firstItem="bqj-Cg-ru1" firstAttribute="leading" secondItem="3Fc-Qu-UAD" secondAttribute="trailing" constant="8" id="PXY-rX-3Sy"/>
+                            <constraint firstItem="bqj-Cg-ru1" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="VNt-C5-cBP"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="3Fc-Qu-UAD" secondAttribute="bottom" constant="14" id="aZE-jG-D5c"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="dmo-rt-hwb"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="65" id="elJ-gb-dhe"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="8s1-8f-PdP" secondAttribute="bottom" id="eti-hO-Kpt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bqj-Cg-ru1" secondAttribute="trailing" id="o7V-6e-lyL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="btnAddress" destination="bqj-Cg-ru1" id="0wd-Ng-DQm"/>
+                        <outlet property="btnUSerLoc" destination="3Fc-Qu-UAD" id="aOv-mC-msI"/>
+                        <outlet property="mapView" destination="FPa-1l-cId" id="4mZ-tA-ESD"/>
+                        <outlet property="tableView" destination="8s1-8f-PdP" id="EFU-zO-Y8X"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

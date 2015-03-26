@@ -7,9 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
+#import "HACLocationManager.h"
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIButton *btnUSerLoc;
+
+@property (weak, nonatomic) IBOutlet UIButton *btnAddress;
+
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+- (IBAction)tapUserLocation:(id)sender;
+
+- (IBAction)tapGetAddress:(id)sender;
 
 @end
 
