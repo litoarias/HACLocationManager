@@ -14,7 +14,6 @@
 		E3107B9E1AC2DB86007577F3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3107B941AC2DB86007577F3 /* LaunchScreen.xib */; };
 		E3107B9F1AC2DB86007577F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3107B961AC2DB86007577F3 /* Main.storyboard */; };
 		E3107BA01AC2DB86007577F3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3107B981AC2DB86007577F3 /* Images.xcassets */; };
-		E3107BA11AC2DB86007577F3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E3107B991AC2DB86007577F3 /* Info.plist */; };
 		E3107BA21AC2DB86007577F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B9A1AC2DB86007577F3 /* main.m */; };
 		E3107BA31AC2DB86007577F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B9C1AC2DB86007577F3 /* ViewController.m */; };
 		E39991281AC3DF59001AB584 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E39991271AC3DF59001AB584 /* MapKit.framework */; };
@@ -190,7 +189,7 @@
 		E3107B5C1AC2D57B007577F3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Hipolito Arias";
 				TargetAttributes = {
 					E3107B631AC2D57B007577F3 = {
@@ -227,7 +226,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3107BA11AC2DB86007577F3 /* Info.plist in Resources */,
 				E3107BA01AC2DB86007577F3 /* Images.xcassets in Resources */,
 				E3107B9E1AC2DB86007577F3 /* LaunchScreen.xib in Resources */,
 				E3107B9F1AC2DB86007577F3 /* Main.storyboard in Resources */,
