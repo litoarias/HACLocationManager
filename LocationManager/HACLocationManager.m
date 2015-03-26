@@ -10,6 +10,7 @@
 
 @implementation HACLocationManager {
     CLLocation *_oldLocation;
+    BOOL _onlyAddress;
 }
 
 # pragma mark - Life cycle
@@ -53,6 +54,17 @@
     }
 }
 
+-(void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error{
+    
+}
+-(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading{
+    
+}
+-(void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager{
+    
+}
+
+
 - (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     
     CLLocation * lastLocation = [locations lastObject];
@@ -61,9 +73,12 @@
         lastLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
         [CLLocationManager authorizationStatus]!=kCLAuthorizationStatusNotDetermined){
         
+        NSLog(@"Entra");
+        
         [self stopUpdatingLocationNow];
         
-        [self.delegate didFinishGetLocationWithLocation:lastLocation];
+        if (!_onlyAddress)
+            [self.delegate didFinishGetLocationWithLocation:lastLocation];
         
     }
     
@@ -91,8 +106,9 @@
 
 - (void) startUpdatingLocationWithDelegate:(id)delegate{
     
-    if (self.locationManager==nil)
+    if (!self.locationManager)
         self.locationManager = [[CLLocationManager alloc]init];
+    
     
     if (delegate)
         self.delegate = delegate;
@@ -118,7 +134,7 @@
     }
     
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
     [self.locationManager startUpdatingLocation];
     
@@ -182,22 +198,34 @@
 
 -(void)getFullAddressFromLastLocationWithDelegate:(id)delegate{
     
+    _onlyAddress = YES;
+    
     if (!_oldLocation) {
         [self startUpdatingLocationWithDelegate:delegate];
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if (delegate)
+        self.delegate = delegate;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
+          
             if (_oldLocation) {
+            
                 [self getAddressFromLocation:_oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
                     
+                    _onlyAddress = NO;
+                    
                     if (!error) {
+                        
                         [self.delegate didFinishGettingFullAddress:dataReceive];
                     }else{
                         [self.delegate didFinishGettingFullAddress:@{@"error":error}];
                     }
+                    
                 }];
             }
+            
         });
     });
 }

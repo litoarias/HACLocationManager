@@ -18,6 +18,7 @@
 		E3107BA21AC2DB86007577F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B9A1AC2DB86007577F3 /* main.m */; };
 		E3107BA31AC2DB86007577F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B9C1AC2DB86007577F3 /* ViewController.m */; };
 		E39991281AC3DF59001AB584 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E39991271AC3DF59001AB584 /* MapKit.framework */; };
+		E39991301AC41C32001AB584 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = E399912F1AC41C32001AB584 /* Annotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		E3107B9B1AC2DB86007577F3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		E3107B9C1AC2DB86007577F3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		E39991271AC3DF59001AB584 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		E399912E1AC41C32001AB584 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
+		E399912F1AC41C32001AB584 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +127,8 @@
 				E3107B921AC2DB86007577F3 /* AppDelegate.m */,
 				E3107B9B1AC2DB86007577F3 /* ViewController.h */,
 				E3107B9C1AC2DB86007577F3 /* ViewController.m */,
+				E399912E1AC41C32001AB584 /* Annotation.h */,
+				E399912F1AC41C32001AB584 /* Annotation.m */,
 				E3107B941AC2DB86007577F3 /* LaunchScreen.xib */,
 				E3107B961AC2DB86007577F3 /* Main.storyboard */,
 				E3107BA41AC2DBD0007577F3 /* Supporting Files */,
@@ -243,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E39991301AC41C32001AB584 /* Annotation.m in Sources */,
 				E3107B9D1AC2DB86007577F3 /* AppDelegate.m in Sources */,
 				E3107BA21AC2DB86007577F3 /* main.m in Sources */,
 				E3107BA31AC2DB86007577F3 /* ViewController.m in Sources */,
