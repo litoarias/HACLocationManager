@@ -107,6 +107,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 25)];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.frame.size.width, 25)];
+    label.textColor = [UIColor whiteColor];
     
     [label setFont:[UIFont boldSystemFontOfSize:14]];
     
@@ -133,13 +134,17 @@
     return view;
 }
 
+# pragma mark - IBActions
+
 - (IBAction)tapUserLocation:(id)sender {
     [self startActivity];
+    [self disabledButtons];
     [[HACLocationManager sharedInstance]startUpdatingLocationWithDelegate:self];
 }
 
 - (IBAction)tapGetAddress:(id)sender {
     [self startActivity];
+    [self disabledButtons];
     [[HACLocationManager sharedInstance]getFullAddressFromLastLocationWithDelegate:self];
 }
 
@@ -147,8 +152,8 @@
     
     MKCoordinateRegion region;
     MKCoordinateSpan span;
-    span.latitudeDelta = 0.003;
-    span.longitudeDelta = 0.003;
+    span.latitudeDelta = 0.005;
+    span.longitudeDelta = 0.005;
     CLLocationCoordinate2D location;
     location.latitude = userLoc.coordinate.latitude;
     location.longitude = userLoc.coordinate.longitude;
@@ -172,7 +177,7 @@
 }
 
 # pragma mark - HACLocationManager
--(void)didFinishGetLocationWithLocation:(CLLocation *)location{
+-(void)didFinishGetLocation:(CLLocation *)location{
     
     [self mapZoomWithMap:self.mapView userLocation:location];
     
@@ -196,6 +201,7 @@
     section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
     [self.tableView reloadData];
     [ai stopAnimating];
+    [self enableButtons];
 }
 
 -(void)didFinishGettingFullAddress:(NSDictionary *)address{
@@ -205,9 +211,13 @@
     [self.tableView reloadData];
     
     [ai stopAnimating];
+    [self enableButtons];
 }
 
-
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+    NSLog(@"Error Location: %@", [error localizedDescription]);
+    [ai stopAnimating];
+}
 
 #pragma mark - MKMapViewDelegate
 -(MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -220,6 +230,16 @@
     MyPin.highlighted = NO;
     
     return MyPin;
+}
+
+-(void)enableButtons{
+    self.btnAddress.enabled = YES;
+    self.btnUSerLoc.enabled = YES;
+}
+
+-(void)disabledButtons{
+    self.btnAddress.enabled = NO;
+    self.btnUSerLoc.enabled = NO;
 }
 
 @end

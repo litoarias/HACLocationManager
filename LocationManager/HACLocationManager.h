@@ -28,9 +28,9 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
 @protocol HACLocationManagerDelegate <NSObject>
 
 @required
--(void)didFinishGetLocationWithLocation:(CLLocation *)location;
+-(void)didFinishGetLocation:(CLLocation *)location;
 -(void)didFinishGettingFullAddress:(NSDictionary *)address;
-
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
 @end
 
 /**
@@ -57,6 +57,14 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
 /**
  *  <#Description#>
  *
+ *  @param location <#location description#>
+ *  @param delegate <#delegate description#>
+ */
+-(void)getFullAddressWihtLocation:(CLLocation *)location delegate:(id)delegate;
+
+/**
+ *  <#Description#>
+ *
  *  @param delegate <#delegate description#>
  */
 - (void) getFullAddressFromLastLocationWithDelegate:(id)delegate;
@@ -67,11 +75,6 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
  *  @param delegate <#delegate description#>
  */
 - (void) startUpdatingLocationWithDelegate:(id)delegate;
-
-/**
- *  <#Description#>
- */
-- (void) stopUpdatingLocationNow;
 
 /**
  *  <#Description#>
@@ -93,21 +96,6 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
  *  @return <#return value description#>
  */
 - (CLLocation *) getLastSavedLocation;
-
-/**
- *  <#Description#>
- *
- *  @param lat <#lat description#>
- *  @param lng <#lng description#>
- */
-- (void) saveLocationInUSerDefaultsWithLatitude:(double)lat longitude:(double)lng;
-
-/**
- *  <#Description#>
- *
- *  @return <#return value description#>
- */
-- (BOOL) locationIsEnabled;
 
 /**
  *  <#Description#>
