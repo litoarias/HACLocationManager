@@ -217,6 +217,7 @@
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"Error Location: %@", [error localizedDescription]);
     [ai stopAnimating];
+    [self enableButtons];
 }
 
 #pragma mark - MKMapViewDelegate

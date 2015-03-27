@@ -28,6 +28,7 @@
     if (self = [super init]) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
     }
     return self;
 }
@@ -35,139 +36,199 @@
 # pragma mark - CLLocationManagerDelegate
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    [self.delegate locationManager:manager didFailWithError:error];
+    [self.delegate locationManager:manager didFailWithError:[self getCustomError]];
 }
 
-- (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+/**
+ *  < iOS 8
+ *
+ */
+-(void)locationManager:(CLLocationManager *)delegator didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    [self locationManagerDidUpdateToLocation:newLocation];
+}
+
+/**
+ *  > iOS 8
+ *
+ */
+- (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    [self locationManagerDidUpdateToLocation:[locations lastObject]];
+}
+
+-(void)locationManagerDidUpdateToLocation:(CLLocation *)newLocation
+{
+    if( newLocation == nil || newLocation.horizontalAccuracy < 0 )
+    {
+        return;
+    }
     
-    CLLocation * lastLocation = [locations lastObject];
+    NSTimeInterval newLocationTime = -[newLocation.timestamp timeIntervalSinceNow];
     
-    if (lastLocation.coordinate.latitude == _oldLocation.coordinate.latitude &&
-        lastLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
+    if( newLocationTime > 5.0 )
+    {
+        return;
+    }
+    
+    CLLocationCoordinate2D newLocationCoordinate = newLocation.coordinate;
+    
+    if( !CLLocationCoordinate2DIsValid(newLocationCoordinate) || ( newLocationCoordinate.latitude == 0.0 && newLocationCoordinate.longitude == 0.0 ))
+    {
+        return;
+    }
+    
+    if (newLocation.coordinate.latitude == _oldLocation.coordinate.latitude &&
+        newLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
         [CLLocationManager authorizationStatus]!=kCLAuthorizationStatusNotDetermined){
         
         [self stopUpdatingLocationNow];
         
-        [self saveLocationInUSerDefaultsWithLatitude:lastLocation.coordinate.latitude longitude:lastLocation.coordinate.longitude];
+        [self saveLocationInUSerDefaultsWithLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
         
         if (!_onlyAddress)
-            [self.delegate didFinishGetLocation:lastLocation];
+            [self.delegate didFinishGetLocation:newLocation];
         
     }
     
-    _oldLocation = [locations lastObject];
+    _oldLocation = newLocation;
 }
 
 # pragma mark - Public Methods
 
 - (void) requestAuthorizationLocation{
     
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+//    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     
     // If the status is denied or only granted for when in use, display an alert
-    if (status == kCLAuthorizationStatusNotDetermined || status == kCLAuthorizationStatusRestricted) {
+//    if (status == kCLAuthorizationStatusNotDetermined || status == kCLAuthorizationStatusRestricted) {
         if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
             [_locationManager requestWhenInUseAuthorization];
-        }else{
-            [self startUpdatingLocationWithDelegate:nil];
         }
-    }
+        
+        [self.locationManager startUpdatingLocation];
+//    }
 }
 
 -(void)getFullAddressWihtLocation:(CLLocation *)location delegate:(id)delegate{
-    
-    _onlyAddress = YES;
-    
-    if (!_oldLocation)
-        [self startUpdatingLocationWithDelegate:delegate];
-    
-    if (delegate)
-        self.delegate = delegate;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if (_oldLocation) {
-                
-                [self getAddressFromLocation:location onCompletion:^(NSDictionary *dataReceive, NSError *error){
-                    
-                    _onlyAddress = NO;
-                    
-                    if (!error) {
-                        [self.delegate didFinishGettingFullAddress:dataReceive];
-                    }else{
-                        [self.delegate didFinishGettingFullAddress:@{@"error":error}];
-                    }
-                    
-                }];
-            }
-        });
-    });
-    
-}
-
--(void)getFullAddressFromLastLocationWithDelegate:(id)delegate{
-    
-    _onlyAddress = YES;
-    
-    if (!_oldLocation) {
-        [self startUpdatingLocationWithDelegate:delegate];
-    }
-    
-    if (delegate)
-        self.delegate = delegate;
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if (_oldLocation) {
-                
-                [self getAddressFromLocation:_oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
-                    
-                    _onlyAddress = NO;
-                    
-                    if (!error) {
-                        [self.delegate didFinishGettingFullAddress:dataReceive];
-                    }else{
-                        [self.delegate didFinishGettingFullAddress:@{@"error":error}];
-                    }
-                    
-                }];
-            }
-            
-        });
-    });
-}
-
-- (void) startUpdatingLocationWithDelegate:(id)delegate{
-    
-    if (!self.locationManager)
-        self.locationManager = [[CLLocationManager alloc]init];
-    
     
     if (delegate){
         self.delegate = nil;
         self.delegate = delegate;
     }
     
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    
-    // If the status is denied or only granted for when in use, display an alert
-    if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted ) {
+    if ([self locationIsEnabled] && [self canUseLocation]) {
+        
+        _onlyAddress = YES;
+        
+        if (!_oldLocation)
+            [self startUpdatingLocationWithDelegate:delegate];
+        
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (_oldLocation) {
+                    
+                    [self getAddressFromLocation:location onCompletion:^(NSDictionary *dataReceive, NSError *error){
+                        
+                        _onlyAddress = NO;
+                        
+                        if (!error) {
+                            [self.delegate didFinishGettingFullAddress:dataReceive];
+                        }else{
+                            [self.delegate didFinishGettingFullAddress:@{@"error":error}];
+                        }
+                        
+                    }];
+                }
+            });
+        });
+        
+    }else{
+        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
         [self dispatchAlertCheckingVersionSystem];
     }
-    // The user has not enabled any location services. Request background authorization.
-    else if (status == kCLAuthorizationStatusNotDetermined)
-    {
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
-        {
-            [self.locationManager requestAlwaysAuthorization];
-        }
+    
+}
+
+-(void)getFullAddressFromLastLocationWithDelegate:(id)delegate{
+    
+    if (delegate){
+        self.delegate = nil;
+        self.delegate = delegate;
     }
     
-    self.locationManager.distanceFilter = kCLDistanceFilterNone;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [self.locationManager startUpdatingLocation];
+    if ([self locationIsEnabled] && [self canUseLocation]) {
+        
+        _onlyAddress = YES;
+        
+        if (!_oldLocation) {
+            [self startUpdatingLocationWithDelegate:delegate];
+        }
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (_oldLocation) {
+                    
+                    [self getAddressFromLocation:_oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
+                        
+                        _onlyAddress = NO;
+                        
+                        if (!error) {
+                            [self.delegate didFinishGettingFullAddress:dataReceive];
+                        }else{
+                            [self.delegate didFinishGettingFullAddress:@{@"error":error}];
+                        }
+                        
+                    }];
+                }
+                
+            });
+        });
+    }else{
+        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
+        [self dispatchAlertCheckingVersionSystem];
+    }
+}
+
+- (void) startUpdatingLocationWithDelegate:(id)delegate{
+    
+    if (delegate){
+        self.delegate = nil;
+        self.delegate = delegate;
+    }
+    
+    if ([self locationIsEnabled] && [self canUseLocation]) {
+        
+        if (!self.locationManager)
+            self.locationManager = [[CLLocationManager alloc]init];
+        
+        
+        CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+        
+        // If the status is denied or only granted for when in use, display an alert
+        if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted ) {
+            [self dispatchAlertCheckingVersionSystem];
+        }
+        // The user has not enabled any location services. Request background authorization.
+        else if (status == kCLAuthorizationStatusNotDetermined)
+        {
+            if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
+            {
+                [self.locationManager requestAlwaysAuthorization];
+            }
+        }
+        
+        [self.locationManager startUpdatingLocation];
+        
+    }else{
+        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
+        [self dispatchAlertCheckingVersionSystem];
+    }
     
 }
 
@@ -194,13 +255,38 @@
     [_locationManager stopUpdatingLocation];
 }
 
+
 - (BOOL) locationIsEnabled{
-    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
-       [CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined ||
-       [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted)
+    if(![CLLocationManager locationServicesEnabled] &&
+       ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted))
         return NO;
     
     return YES;
+    
+}
+
+- (BOOL) canUseLocation{
+    
+    CLAuthorizationStatus authStatus = [CLLocationManager authorizationStatus];
+    
+    if([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
+    {
+        if ([CLLocationManager locationServicesEnabled] &&
+            ((authStatus == kCLAuthorizationStatusAuthorizedAlways) ||
+             (authStatus == kCLAuthorizationStatusAuthorizedWhenInUse) ||
+             ((authStatus == kCLAuthorizationStatusNotDetermined))))
+            return YES;
+        
+        return NO;
+    }
+    
+    if ([CLLocationManager locationServicesEnabled] && ((authStatus == kCLAuthorizationStatusAuthorized) || ((authStatus == kCLAuthorizationStatusNotDetermined))))
+        return YES;
+    
+    return NO;
+    
 }
 
 - (void) saveLocationInUSerDefaultsWithLatitude:(double)lat longitude:(double)lng{
@@ -257,7 +343,7 @@
         //        NSLog(@"formatted address : %@", [d valueForKey:@"FormattedAddressLines"]);
         
         completionBlock(d, nil);
-
+        
     } failureHandler:^(NSError *error) {
         completionBlock(nil, error);
     }];
@@ -296,6 +382,13 @@
         [alertView show];
         
     }
+    
+}
+
+-(NSError*)getCustomError{
+    return [NSError errorWithDomain:@"Fail Location Permissions"
+                               code:1111
+                           userInfo:@{NSLocalizedDescriptionKey:@"Location services are not enabled"}];
     
 }
 
