@@ -4,7 +4,7 @@ Requests are made using blocks, giving answers through their delegates. If synta
 Use singleton design pattern and its compatibility is complete with iOS7 or higher.
 
 ##Requirements & Dependecies
-- iOS >= 6.0
+- iOS >= 7.0
 - ARC enabled
 - CoreLocation Framework
 
