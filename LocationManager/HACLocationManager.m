@@ -9,8 +9,32 @@
 #import "HACLocationManager.h"
 
 @implementation HACLocationManager {
-    CLLocation *_oldLocation;
-    BOOL _onlyAddress;
+    BOOL _stopLocation;
+    BOOL _firstUpdate;
+    BOOL _othersUpdate;
+}
+
+@synthesize precision = _precision;
+@synthesize firstUpdateSeconds = _firstUpdateSeconds;
+
+/**
+ *  GETTERS
+ */
+- (int)precision{
+    return _precision;
+}
+- (int)firstUpdateSeconds{
+    return _firstUpdateSeconds;
+}
+
+/**
+ *  SETTERS
+ */
+- (void) setPrecision:(int)precision{
+    _precision = precision;
+}
+- (void) setFirstUpdateSeconds:(int)firstUpdateSeconds{
+    _firstUpdateSeconds = firstUpdateSeconds;
 }
 
 # pragma mark - Life cycle
@@ -28,7 +52,11 @@
     if (self = [super init]) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
+        _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+        
+        _precision = NormalPrecision;
+        _firstUpdateSeconds = 3;
     }
     return self;
 }
@@ -65,134 +93,76 @@
     }
     
     NSTimeInterval newLocationTime = -[newLocation.timestamp timeIntervalSinceNow];
-    
     if( newLocationTime > 5.0 )
     {
         return;
     }
     
     CLLocationCoordinate2D newLocationCoordinate = newLocation.coordinate;
-    
     if( !CLLocationCoordinate2DIsValid(newLocationCoordinate) || ( newLocationCoordinate.latitude == 0.0 && newLocationCoordinate.longitude == 0.0 ))
     {
         return;
     }
     
-    if (newLocation.coordinate.latitude == _oldLocation.coordinate.latitude &&
-        newLocation.coordinate.longitude == _oldLocation.coordinate.longitude &&
-        [CLLocationManager authorizationStatus]!=kCLAuthorizationStatusNotDetermined){
-        
-        [self stopUpdatingLocationNow];
-        
-        [self saveLocationInUSerDefaultsWithLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
-        
-        if (!_onlyAddress)
-            [self.delegate didFinishGetLocation:newLocation];
-        
+    if (_firstUpdate)
+    {
+        [self.delegate didFinishFirstUpdateLocation:newLocation];
+        _firstUpdate = NO;
+        return;
     }
     
-    _oldLocation = newLocation;
+    if (_othersUpdate)
+    {
+        [self.delegate didUpdatingLocationExactly:newLocation];
+    }
+    
+    [self saveLocationInUSerDefaultsWithLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
+    
+    
+    if (!_stopLocation)
+    {
+        return;
+    }
+    
+    [self getFullAddressWihtLocation:newLocation];
+    
+    [self stopUpdatingLocationNow];
+    
+    _stopLocation = NO;
+    
+    _othersUpdate = NO;
+    
 }
 
 # pragma mark - Public Methods
 
 - (void) requestAuthorizationLocation{
-    
-//    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    
-    // If the status is denied or only granted for when in use, display an alert
-//    if (status == kCLAuthorizationStatusNotDetermined || status == kCLAuthorizationStatusRestricted) {
-        if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-            [_locationManager requestWhenInUseAuthorization];
-        }
-        
-        [self.locationManager startUpdatingLocation];
-//    }
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [_locationManager requestWhenInUseAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
+    [self.locationManager stopUpdatingLocation];
 }
 
--(void)getFullAddressWihtLocation:(CLLocation *)location delegate:(id)delegate{
-    
-    if (delegate){
-        self.delegate = nil;
-        self.delegate = delegate;
-    }
+- (void) getFullAddressWihtLocation:(CLLocation *)location{
     
     if ([self locationIsEnabled] && [self canUseLocation]) {
         
-        _onlyAddress = YES;
         
-        if (!_oldLocation)
-            [self startUpdatingLocationWithDelegate:delegate];
-        
-        
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if (_oldLocation) {
-                    
-                    [self getAddressFromLocation:location onCompletion:^(NSDictionary *dataReceive, NSError *error){
-                        
-                        _onlyAddress = NO;
-                        
-                        if (!error) {
-                            [self.delegate didFinishGettingFullAddress:dataReceive];
-                        }else{
-                            [self.delegate didFinishGettingFullAddress:@{@"error":error}];
-                        }
-                        
-                    }];
-                }
-            });
-        });
-        
+        [self getAddressFromLocation:location onCompletion:^(NSDictionary *dataReceive, NSError *error){
+            
+            if (!error) {
+                [self.delegate didFinishGetAddress:dataReceive location:location];
+            }else{
+                [self.delegate didFailGettingAddressWithError:error];
+            }
+            
+        }];
     }else{
         [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
         [self dispatchAlertCheckingVersionSystem];
     }
     
-}
-
--(void)getFullAddressFromLastLocationWithDelegate:(id)delegate{
-    
-    if (delegate){
-        self.delegate = nil;
-        self.delegate = delegate;
-    }
-    
-    if ([self locationIsEnabled] && [self canUseLocation]) {
-        
-        _onlyAddress = YES;
-        
-        if (!_oldLocation) {
-            [self startUpdatingLocationWithDelegate:delegate];
-        }
-        
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if (_oldLocation) {
-                    
-                    [self getAddressFromLocation:_oldLocation onCompletion:^(NSDictionary *dataReceive, NSError *error){
-                        
-                        _onlyAddress = NO;
-                        
-                        if (!error) {
-                            [self.delegate didFinishGettingFullAddress:dataReceive];
-                        }else{
-                            [self.delegate didFinishGettingFullAddress:@{@"error":error}];
-                        }
-                        
-                    }];
-                }
-                
-            });
-        });
-    }else{
-        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
-        [self dispatchAlertCheckingVersionSystem];
-    }
 }
 
 - (void) startUpdatingLocationWithDelegate:(id)delegate{
@@ -203,6 +173,7 @@
     }
     
     if ([self locationIsEnabled] && [self canUseLocation]) {
+        
         
         if (!self.locationManager)
             self.locationManager = [[CLLocationManager alloc]init];
@@ -222,6 +193,9 @@
                 [self.locationManager requestAlwaysAuthorization];
             }
         }
+        
+        [self dispatchAfterForUpdateUI];
+        [self dispatchAfterForStopUpdatingLocation];
         
         [self.locationManager startUpdatingLocation];
         
@@ -254,7 +228,6 @@
 - (void) stopUpdatingLocationNow{
     [_locationManager stopUpdatingLocation];
 }
-
 
 - (BOOL) locationIsEnabled{
     if(![CLLocationManager locationServicesEnabled] &&
@@ -302,7 +275,7 @@
     [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if (alertView.tag==1001){
         if (buttonIndex == 1) {
@@ -314,9 +287,9 @@
 }
 
 
-- (void)getAddressFromLocation:(CLLocation *)location
-             completionHandler:(void (^)(NSMutableDictionary *placemark))completionHandler
-                failureHandler:(void (^)(NSError *error))failureHandler
+- (void) getAddressFromLocation:(CLLocation *)location
+              completionHandler:(void (^)(NSMutableDictionary *placemark))completionHandler
+                 failureHandler:(void (^)(NSError *error))failureHandler
 {
     CLGeocoder *geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -331,7 +304,7 @@
     }];
 }
 
--(void)getAddressFromLocation:(CLLocation *)location onCompletion:(ResponseDataCompletionBlock)completionBlock{
+- (void) getAddressFromLocation:(CLLocation *)location onCompletion:(ResponseDataCompletionBlock)completionBlock{
     
     // Call the method to find the address
     [self getAddressFromLocation:location completionHandler:^(NSMutableDictionary *d) {
@@ -350,7 +323,7 @@
 }
 
 
--(void)dispatchAlertCheckingVersionSystem{
+- (void) dispatchAlertCheckingVersionSystem{
     
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     
@@ -385,11 +358,32 @@
     
 }
 
--(NSError*)getCustomError{
+- (NSError*) getCustomError{
     return [NSError errorWithDomain:@"Fail Location Permissions"
                                code:1111
                            userInfo:@{NSLocalizedDescriptionKey:@"Location services are not enabled"}];
     
+}
+
+- (void)dispatchAfterForStopUpdatingLocation{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_precision * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self stopUpdatingLocation];
+    });
+}
+
+- (void)dispatchAfterForUpdateUI{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_firstUpdateSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self startUpdatingUI];
+    });
+}
+
+- (void) stopUpdatingLocation{
+    _stopLocation = YES;
+}
+
+- (void) startUpdatingUI{
+    _firstUpdate = YES;
+    _othersUpdate = YES;
 }
 
 @end

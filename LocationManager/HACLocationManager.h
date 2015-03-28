@@ -10,9 +10,30 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+
 #define LAST_LOCATION @"kUserLocation"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
+/**
+ *  <#Description#>
+ */
+typedef enum _PrecisionLocation {
+    /**
+     *  <#Description#>
+     */
+    LowPorecision = 5,
+    /**
+     *  <#Description#>
+     */
+    NormalPrecision = 10,
+    /**
+     *  <#Description#>
+     */
+    HighPrecision = 15
+    
+} PrecisionLocation;
+
 
 /**
  *  This is a block of completion, for when background tasks are completed, can respond.
@@ -28,9 +49,32 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
 @protocol HACLocationManagerDelegate <NSObject>
 
 @required
--(void)didFinishGetLocation:(CLLocation *)location;
--(void)didFinishGettingFullAddress:(NSDictionary *)address;
+
+/**
+ *  This method indicates its delegate when finished first obtaining location (latitude and longitude)
+ */
+-(void)didFinishFirstUpdateLocation:(CLLocation *)location;
+
+/**
+ *  This method is executed following didFinishFirstUpdateLocation:location for the exact location. You can upgrade the interface on each iteration of this method.
+ */
+-(void)didUpdatingLocationExactly:(CLLocation *)location;
+
+/**
+ *   This method indicates its delegate when finished first obtaining address (placemark)
+ */
+-(void)didFinishGetAddress:(NSDictionary *)placemark location:(CLLocation *)location;
+
+/**
+ *  This method indicates when obtaining the address fails
+ */
+-(void)didFailGettingAddressWithError:(NSError *)error;
+
+/**
+ *  This method indicates when obtaining the location fails
+ */
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
+
 @end
 
 /**
@@ -49,25 +93,20 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
 @property (weak, nonatomic) id<HACLocationManagerDelegate>delegate;
 
 /**
+ *  <#Description#>
+ */
+@property int precision;
+
+/**
+ *  <#Description#>
+ */
+@property int firstUpdateSeconds;
+
+/**
  *  This method is used to request permissions location, you can use them anywhere you want, 
  *  as long before requesting location.
  */
 - (void) requestAuthorizationLocation;
-
-/**
- *  <#Description#>
- *
- *  @param location <#location description#>
- *  @param delegate <#delegate description#>
- */
--(void)getFullAddressWihtLocation:(CLLocation *)location delegate:(id)delegate;
-
-/**
- *  <#Description#>
- *
- *  @param delegate <#delegate description#>
- */
-- (void) getFullAddressFromLastLocationWithDelegate:(id)delegate;
 
 /**
  *  <#Description#>

@@ -14,15 +14,11 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *btnUSerLoc;
 
-@property (weak, nonatomic) IBOutlet UIButton *btnAddress;
-
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 - (IBAction)tapUserLocation:(id)sender;
-
-- (IBAction)tapGetAddress:(id)sender;
 
 @end
 

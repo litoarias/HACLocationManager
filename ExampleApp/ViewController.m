@@ -15,6 +15,7 @@
     NSArray * section_0;
     NSArray * section_1;
     UIActivityIndicatorView *ai;
+    Annotation *userAnnotation;
 }
 
 @end
@@ -25,9 +26,10 @@
     [super viewDidLoad];
     
     [[HACLocationManager sharedInstance]requestAuthorizationLocation];
+    [[HACLocationManager sharedInstance]setPrecision:HighPrecision];
+    [[HACLocationManager sharedInstance]setFirstUpdateSeconds:2];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
-    
     
 }
 
@@ -41,13 +43,6 @@
     self.mapView.layer.shadowRadius = 5.0;
     self.mapView.layer.shadowOpacity = 0.6;
     self.mapView.layer.masksToBounds = NO;
-    
-    self.btnAddress.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.btnAddress.layer.shadowOffset = CGSizeMake(4, 10);
-    self.btnAddress.layer.cornerRadius = 4.0;
-    self.btnAddress.layer.shadowRadius = 5.0;
-    self.btnAddress.layer.shadowOpacity = 0.6;
-    self.btnAddress.layer.masksToBounds = NO;
     
     self.btnUSerLoc.layer.shadowColor = [UIColor blackColor].CGColor;
     self.btnUSerLoc.layer.shadowOffset = CGSizeMake(4, 10);
@@ -142,12 +137,6 @@
     [[HACLocationManager sharedInstance]startUpdatingLocationWithDelegate:self];
 }
 
-- (IBAction)tapGetAddress:(id)sender {
-    [self startActivity];
-    [self disabledButtons];
-    [[HACLocationManager sharedInstance]getFullAddressFromLastLocationWithDelegate:self];
-}
-
 -(void)mapZoomWithMap:(MKMapView *)map userLocation:(CLLocation *)userLoc{
     
     MKCoordinateRegion region;
@@ -177,13 +166,13 @@
 }
 
 # pragma mark - HACLocationManager
--(void)didFinishGetLocation:(CLLocation *)location{
+-(void)didFinishFirstUpdateLocation:(CLLocation *)location{
     
-    [self mapZoomWithMap:self.mapView userLocation:location];
     
     NSMutableArray * annotationsToRemove = [self.mapView.annotations mutableCopy];
-    [annotationsToRemove removeObject:self.mapView.userLocation];
-    [self.mapView removeAnnotations:annotationsToRemove];
+    
+    if (annotationsToRemove.count > 0)
+        [self.mapView removeAnnotations:annotationsToRemove];
     
     MKCoordinateRegion Bridge = { {0.0, 0.0} , {0.0, 0.0} };
     Bridge.center.latitude = location.coordinate.latitude;
@@ -191,31 +180,47 @@
     Bridge.span.longitudeDelta = 0.04f;
     Bridge.span.latitudeDelta = 0.04f;
     
-    Annotation *ann = [[Annotation alloc] init];
-    ann.title = @"I'm a pin";
-    ann.subtitle = @"Your subtitle";
-    ann.coordinate = Bridge.center;
-    [self.mapView addAnnotation:ann];
+    userAnnotation = [[Annotation alloc] init];
+    userAnnotation.title = @"I'm a pin";
+    userAnnotation.subtitle = @"Your subtitle";
+    userAnnotation.coordinate = Bridge.center;
     
+    [self.mapView addAnnotation:userAnnotation];
     
     section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
+    
     [self.tableView reloadData];
-    [ai stopAnimating];
-    [self enableButtons];
 }
 
--(void)didFinishGettingFullAddress:(NSDictionary *)address{
+
+
+-(void) didUpdatingLocationExactly:(CLLocation *)location{
+    [self mapZoomWithMap:self.mapView userLocation:location];
+    [userAnnotation setCoordinate:location.coordinate];
+}
+
+
+-(void)didFinishGetAddress:(NSDictionary *)placemark location:(CLLocation *)location{
     
-    section_1 = (NSArray *)[address valueForKey:@"FormattedAddressLines"];
+    section_1 = (NSArray *)[placemark valueForKey:@"FormattedAddressLines"];
+    [self enableButtons];
+    
+    section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
+    
     
     [self.tableView reloadData];
-    
     [ai stopAnimating];
-    [self enableButtons];
+    
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"Error Location: %@", [error localizedDescription]);
+    [ai stopAnimating];
+    [self enableButtons];
+}
+
+-(void)didFailGettingAddressWithError:(NSError *)error{
+    NSLog(@"Error al coger la dirección\nError: %@", [error localizedDescription]);
     [ai stopAnimating];
     [self enableButtons];
 }
@@ -234,12 +239,10 @@
 }
 
 -(void)enableButtons{
-    self.btnAddress.enabled = YES;
     self.btnUSerLoc.enabled = YES;
 }
 
 -(void)disabledButtons{
-    self.btnAddress.enabled = NO;
     self.btnUSerLoc.enabled = NO;
 }
 
