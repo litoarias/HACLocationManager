@@ -11,11 +11,11 @@
 
 #define cellId @"CellId"
 
-@interface ViewController () <HACLocationManagerDelegate, MKMapViewDelegate> {
+@interface ViewController () < MKMapViewDelegate> {
     NSArray * section_0;
     NSArray * section_1;
     UIActivityIndicatorView *ai;
-    Annotation *userAnnotation;
+    HACLocationManager *locationManager;
 }
 
 @end
@@ -25,9 +25,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[HACLocationManager sharedInstance]requestAuthorizationLocation];
-    [[HACLocationManager sharedInstance]setPrecision:HighPrecision];
-    [[HACLocationManager sharedInstance]setFirstUpdateSeconds:2];
+    locationManager = [HACLocationManager sharedInstance];
+    
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
     
@@ -45,11 +44,40 @@
     self.mapView.layer.masksToBounds = NO;
     
     self.btnUSerLoc.layer.shadowColor = [UIColor blackColor].CGColor;
+    
     self.btnUSerLoc.layer.shadowOffset = CGSizeMake(4, 10);
     self.btnUSerLoc.layer.cornerRadius = 4.0;
     self.btnUSerLoc.layer.shadowRadius = 5.0;
     self.btnUSerLoc.layer.shadowOpacity = 0.6;
     self.btnUSerLoc.layer.masksToBounds = NO;
+    
+    [locationManager Location];
+    
+//    
+    locationManager.locationUpdatedBlock = ^(CLLocation *location){
+        NSLog(@"UPDATE: %@", location);
+    };
+    locationManager.locationEndBlock = ^(CLLocation *location){
+        NSLog(@"END: %@", location);
+    };
+    locationManager.locationErrorBlock = ^(NSError *error){
+        NSLog(@"ERROR: %@", error);
+    };
+    
+    
+    [locationManager Geocoding];
+    
+    locationManager.geocodingUpdatedBlock = ^(NSDictionary *placemark){
+        NSLog(@"%@", placemark);
+    };
+    
+    
+    //    //
+    //    [[HACLocationManager sharedInstance]locationUpdatedBlock = ^(CLLocation * location) {
+    //
+    //        NSLog(@"Location change to: %@", location);
+    //
+    //    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -134,7 +162,7 @@
 - (IBAction)tapUserLocation:(id)sender {
     [self startActivity];
     [self disabledButtons];
-    [[HACLocationManager sharedInstance]startUpdatingLocationWithDelegate:self];
+    //    [[HACLocationManager sharedInstance]startUpdatingLocationWithDelegate:self];
 }
 
 -(void)mapZoomWithMap:(MKMapView *)map userLocation:(CLLocation *)userLoc{
@@ -168,25 +196,6 @@
 # pragma mark - HACLocationManager
 -(void)didFinishFirstUpdateLocation:(CLLocation *)location{
     
-    
-    NSMutableArray * annotationsToRemove = [self.mapView.annotations mutableCopy];
-    
-    if (annotationsToRemove.count > 0)
-        [self.mapView removeAnnotations:annotationsToRemove];
-    
-    MKCoordinateRegion Bridge = { {0.0, 0.0} , {0.0, 0.0} };
-    Bridge.center.latitude = location.coordinate.latitude;
-    Bridge.center.longitude = location.coordinate.longitude;
-    Bridge.span.longitudeDelta = 0.04f;
-    Bridge.span.latitudeDelta = 0.04f;
-    
-    userAnnotation = [[Annotation alloc] init];
-    userAnnotation.title = @"I'm a pin";
-    userAnnotation.subtitle = @"Your subtitle";
-    userAnnotation.coordinate = Bridge.center;
-    
-    [self.mapView addAnnotation:userAnnotation];
-    
     section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
     
     [self.tableView reloadData];
@@ -194,9 +203,8 @@
 
 
 
--(void) didUpdatingLocationExactly:(CLLocation *)location{
+-(void) didUpdatingLocation:(CLLocation *)location{
     [self mapZoomWithMap:self.mapView userLocation:location];
-    [userAnnotation setCoordinate:location.coordinate];
 }
 
 
@@ -209,12 +217,14 @@
     
     
     [self.tableView reloadData];
+    
     [ai stopAnimating];
     
 }
 
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+-(void)didFailGettingLocationWithError:(NSError *)error{
     NSLog(@"Error Location: %@", [error localizedDescription]);
+    [[[UIAlertView alloc]initWithTitle:@"Error" message:[error localizedDescription]  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
     [ai stopAnimating];
     [self enableButtons];
 }
@@ -226,17 +236,22 @@
 }
 
 #pragma mark - MKMapViewDelegate
--(MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    
-    MKPinAnnotationView *MyPin=[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
-    
-    MyPin.draggable = YES;
-    MyPin.animatesDrop=TRUE;
-    MyPin.canShowCallout = YES;
-    MyPin.highlighted = NO;
-    
-    return MyPin;
-}
+//-(MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+////
+////    if ([annotation isKindOfClass:[MKUserLocation class]])
+////    {
+////        annotation.image = [UIImage imageNamed:@""];
+////    }
+//
+//    MKPinAnnotationView *MyPin=[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
+//
+//    MyPin.draggable = YES;
+//    MyPin.animatesDrop=TRUE;
+//    MyPin.canShowCallout = YES;
+//    MyPin.highlighted = NO;
+//
+//    return MyPin;
+//}
 
 -(void)enableButtons{
     self.btnUSerLoc.enabled = YES;

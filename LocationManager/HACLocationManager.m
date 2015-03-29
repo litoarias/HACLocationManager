@@ -10,36 +10,17 @@
 
 @implementation HACLocationManager {
     BOOL _stopLocation;
-    BOOL _firstUpdate;
-    BOOL _othersUpdate;
+    BOOL _isGeocoding;
+    BOOL _isLocation;
+    NSTimer *_queryingTimer;
+    CLLocation *_location;
 }
 
-@synthesize precision = _precision;
-@synthesize firstUpdateSeconds = _firstUpdateSeconds;
 
-/**
- *  GETTERS
- */
-- (int)precision{
-    return _precision;
-}
-- (int)firstUpdateSeconds{
-    return _firstUpdateSeconds;
-}
-
-/**
- *  SETTERS
- */
-- (void) setPrecision:(int)precision{
-    _precision = precision;
-}
-- (void) setFirstUpdateSeconds:(int)firstUpdateSeconds{
-    _firstUpdateSeconds = firstUpdateSeconds;
-}
 
 # pragma mark - Life cycle
 
-+ (id) sharedInstance {
++ (instancetype) sharedInstance {
     static HACLocationManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -48,15 +29,13 @@
     return sharedInstance;
 }
 
-- (id) init {
+- (instancetype) init {
     if (self = [super init]) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
         
-        _precision = NormalPrecision;
-        _firstUpdateSeconds = 3;
     }
     return self;
 }
@@ -64,7 +43,9 @@
 # pragma mark - CLLocationManagerDelegate
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    [self.delegate locationManager:manager didFailWithError:[self getCustomError]];
+    if(self.locationErrorBlock){
+        self.locationErrorBlock(error);
+    }
 }
 
 /**
@@ -85,54 +66,7 @@
     [self locationManagerDidUpdateToLocation:[locations lastObject]];
 }
 
--(void)locationManagerDidUpdateToLocation:(CLLocation *)newLocation
-{
-    if( newLocation == nil || newLocation.horizontalAccuracy < 0 )
-    {
-        return;
-    }
-    
-    NSTimeInterval newLocationTime = -[newLocation.timestamp timeIntervalSinceNow];
-    if( newLocationTime > 5.0 )
-    {
-        return;
-    }
-    
-    CLLocationCoordinate2D newLocationCoordinate = newLocation.coordinate;
-    if( !CLLocationCoordinate2DIsValid(newLocationCoordinate) || ( newLocationCoordinate.latitude == 0.0 && newLocationCoordinate.longitude == 0.0 ))
-    {
-        return;
-    }
-    
-    if (_firstUpdate)
-    {
-        [self.delegate didFinishFirstUpdateLocation:newLocation];
-        _firstUpdate = NO;
-        return;
-    }
-    
-    if (_othersUpdate)
-    {
-        [self.delegate didUpdatingLocationExactly:newLocation];
-    }
-    
-    [self saveLocationInUSerDefaultsWithLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
-    
-    
-    if (!_stopLocation)
-    {
-        return;
-    }
-    
-    [self getFullAddressWihtLocation:newLocation];
-    
-    [self stopUpdatingLocationNow];
-    
-    _stopLocation = NO;
-    
-    _othersUpdate = NO;
-    
-}
+
 
 # pragma mark - Public Methods
 
@@ -144,33 +78,31 @@
     [self.locationManager stopUpdatingLocation];
 }
 
-- (void) getFullAddressWihtLocation:(CLLocation *)location{
-    
-    if ([self locationIsEnabled] && [self canUseLocation]) {
-        
-        
-        [self getAddressFromLocation:location onCompletion:^(NSDictionary *dataReceive, NSError *error){
-            
-            if (!error) {
-                [self.delegate didFinishGetAddress:dataReceive location:location];
-            }else{
-                [self.delegate didFailGettingAddressWithError:error];
-            }
-            
-        }];
-    }else{
-        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
-        [self dispatchAlertCheckingVersionSystem];
-    }
+-(void) Location{
+    [self startUpdatingLocation];
+    _isLocation=YES;
+}
+
+-(void) Geocoding{
+    [self startUpdatingLocation];
+    _isGeocoding = YES;
     
 }
 
-- (void) startUpdatingLocationWithDelegate:(id)delegate{
+- (CLLocation *) getLastSavedLocation{
     
-    if (delegate){
-        self.delegate = nil;
-        self.delegate = delegate;
-    }
+    NSDictionary *userLoc = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_LOCATION];
+    
+    return [[CLLocation alloc] initWithLatitude:[[userLoc objectForKey:@"lat"]doubleValue]
+                                      longitude:[[userLoc objectForKey:@"lng"]doubleValue]];
+}
+
+
+# pragma mark - Private Methods
+
+
+- (void) startUpdatingLocation{
+    
     
     if ([self locationIsEnabled] && [self canUseLocation]) {
         
@@ -194,40 +126,49 @@
             }
         }
         
-        [self dispatchAfterForUpdateUI];
-        [self dispatchAfterForStopUpdatingLocation];
-        
         [self.locationManager startUpdatingLocation];
         
+        [self startTimer];
+        
     }else{
-        [self.delegate locationManager:nil didFailWithError:[self getCustomError]];
         [self dispatchAlertCheckingVersionSystem];
     }
     
 }
 
-- (void) setDistanceFilter:(double)distanceFilter{
-    _locationManager.desiredAccuracy = distanceFilter;
-}
-
-- (void) setDesiredAccuary:(double)desired{
-    _locationManager.desiredAccuracy = desired;
-}
-
-- (CLLocation *) getLastSavedLocation{
+-(void)locationManagerDidUpdateToLocation:(CLLocation *)newLocation
+{
     
-    NSDictionary *userLoc = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_LOCATION];
+    if( newLocation == nil || newLocation.horizontalAccuracy < 0 )
+    {
+        return;
+    }
     
-    return [[CLLocation alloc] initWithLatitude:[[userLoc objectForKey:@"lat"]doubleValue]
-                                      longitude:[[userLoc objectForKey:@"lng"]doubleValue]];
+    NSTimeInterval newLocationTime = -[newLocation.timestamp timeIntervalSinceNow];
+    
+    if( newLocationTime > 5.0 )
+    {
+        return;
+    }
+    
+    CLLocationCoordinate2D newLocationCoordinate = newLocation.coordinate;
+    
+    if( !CLLocationCoordinate2DIsValid(newLocationCoordinate) || ( newLocationCoordinate.latitude == 0.0 && newLocationCoordinate.longitude == 0.0 ))
+    {
+        return;
+    }
+    
+    _location = newLocation;
+    
+    if (self.locationUpdatedBlock) {
+        self.locationUpdatedBlock(newLocation);
+    }
+    
+    [self saveLocationInUSerDefaultsWithLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude];
+    
+    
 }
 
-
-# pragma mark - Private Methods
-
-- (void) stopUpdatingLocationNow{
-    [_locationManager stopUpdatingLocation];
-}
 
 - (BOOL) locationIsEnabled{
     if(![CLLocationManager locationServicesEnabled] &&
@@ -288,40 +229,34 @@
 
 
 - (void) getAddressFromLocation:(CLLocation *)location
-              completionHandler:(void (^)(NSMutableDictionary *placemark))completionHandler
-                 failureHandler:(void (^)(NSError *error))failureHandler
 {
-    CLGeocoder *geocoder = [CLGeocoder new];
-    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        if (failureHandler && (error || placemarks.count == 0)) {
-            failureHandler(error);
-        } else {
-            CLPlacemark *placemark = [placemarks objectAtIndex:0];
-            if(completionHandler) {
-                completionHandler([placemark.addressDictionary mutableCopy]);
+    if ([self locationIsEnabled] && [self canUseLocation]) {
+        
+        CLGeocoder *geocoder = [CLGeocoder new];
+        
+        [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+            
+            if (self.geocodingErrorBlock && (error || placemarks.count == 0)) {
+                
+                self.geocodingErrorBlock(error);
+                
+            } else {
+                
+                CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                
+                if(self.geocodingUpdatedBlock) {
+                    self.geocodingUpdatedBlock([placemark.addressDictionary mutableCopy]);
+                }
+                
             }
-        }
-    }];
-}
-
-- (void) getAddressFromLocation:(CLLocation *)location onCompletion:(ResponseDataCompletionBlock)completionBlock{
+        }];
+        
+    }else{
+        [self dispatchAlertCheckingVersionSystem];
+    }
     
-    // Call the method to find the address
-    [self getAddressFromLocation:location completionHandler:^(NSMutableDictionary *d) {
-        
-        //        NSLog(@"address informations : %@", d);
-        //        NSLog(@"Street : %@", [d valueForKey:@"Street"]);
-        //        NSLog(@"ZIP code : %@", [d valueForKey:@"ZIP"]);
-        //        NSLog(@"City : %@", [d valueForKey:@"City"]);
-        //        NSLog(@"formatted address : %@", [d valueForKey:@"FormattedAddressLines"]);
-        
-        completionBlock(d, nil);
-        
-    } failureHandler:^(NSError *error) {
-        completionBlock(nil, error);
-    }];
+    
 }
-
 
 - (void) dispatchAlertCheckingVersionSystem{
     
@@ -358,32 +293,65 @@
     
 }
 
-- (NSError*) getCustomError{
-    return [NSError errorWithDomain:@"Fail Location Permissions"
-                               code:1111
-                           userInfo:@{NSLocalizedDescriptionKey:@"Location services are not enabled"}];
+- (NSError*) getCustomErrorWithUserInfo:(NSString *)info{
+    return [NSError errorWithDomain:kCLErrorDomain
+                               code:1
+                           userInfo:@{NSLocalizedDescriptionKey:info}];
     
 }
 
-- (void)dispatchAfterForStopUpdatingLocation{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_precision * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self stopUpdatingLocation];
-    });
+
+-(void)startTimer
+{
+    [self stopTimer];
+    _queryingTimer = [NSTimer scheduledTimerWithTimeInterval:kDefaultTimeOut
+                                                      target:self
+                                                    selector:@selector(timerPassed)
+                                                    userInfo:nil
+                                                     repeats:NO];
 }
 
-- (void)dispatchAfterForUpdateUI{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_firstUpdateSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self startUpdatingUI];
-    });
+-(void)stopTimer
+{
+    if (_queryingTimer)
+    {
+        if ([_queryingTimer isValid])
+        {
+            [_queryingTimer invalidate];
+        }
+        _queryingTimer = nil;
+    }
 }
 
-- (void) stopUpdatingLocation{
-    _stopLocation = YES;
+-(void)timerPassed
+{
+    [self stopTimer];
+    
+    [self.locationManager stopUpdatingLocation];
+    
+    if (_isLocation) {
+        if (self.locationEndBlock) {
+            self.locationEndBlock(_location);
+        }
+    }
+    if(_isGeocoding){
+        [self getAddressFromLocation:_location];
+        _isGeocoding=NO;
+    }
+    
+    
 }
 
-- (void) startUpdatingUI{
-    _firstUpdate = YES;
-    _othersUpdate = YES;
-}
+//switch (self.locationErrorCode)
+//{
+//    case kCLErrorLocationUnknown:
+//        [self alert:@"Couldn't figure out where this photo was taken (yet)."]; break;
+//    case kCLErrorDenied:
+//        [self alert:@"Location Services disabled under Privacy in Settings application."]; break;
+//    case kCLErrorNetwork:
+//        [self alert:@"Can't figure out where this photo is being taken.  Verify your connection to the network."]; break;
+//    default:
+//        [self alert:@"Cant figure out where this photo is being taken, sorry."]; break;
+//}
 
 @end

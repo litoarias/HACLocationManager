@@ -10,97 +10,29 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-
+#define kDefaultTimeOut 5
 #define LAST_LOCATION @"kUserLocation"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
-/**
- *  <#Description#>
- */
-typedef enum _PrecisionLocation {
-    /**
-     *  <#Description#>
-     */
-    LowPorecision = 5,
-    /**
-     *  <#Description#>
-     */
-    NormalPrecision = 10,
-    /**
-     *  <#Description#>
-     */
-    HighPrecision = 15
-    
-} PrecisionLocation;
+typedef void (^HACLocationManagerUpdatingCallback)(CLLocation *);
+typedef void (^HACLocationManagerEndCallback)(CLLocation *);
+typedef void (^HACLocationManagerErrorCallback)(NSError *);
+
+typedef void (^HACGeocodingManagerCallback)(NSDictionary *);
+typedef void (^HACGeocodingManagerErrorCallback)(NSError *);
 
 
-/**
- *  This is a block of completion, for when background tasks are completed, can respond.
- *
- *  @param data  Dictionary of response
- *  @param error Error response
- */
-typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
-
-/**
- *  <#Description#>
- */
-@protocol HACLocationManagerDelegate <NSObject>
-
-@required
-
-/**
- *  This method indicates its delegate when finished first obtaining location (latitude and longitude)
- */
--(void)didFinishFirstUpdateLocation:(CLLocation *)location;
-
-/**
- *  This method is executed following didFinishFirstUpdateLocation:location for the exact location. You can upgrade the interface on each iteration of this method.
- */
--(void)didUpdatingLocationExactly:(CLLocation *)location;
-
-/**
- *   This method indicates its delegate when finished first obtaining address (placemark)
- */
--(void)didFinishGetAddress:(NSDictionary *)placemark location:(CLLocation *)location;
-
-/**
- *  This method indicates when obtaining the address fails
- */
--(void)didFailGettingAddressWithError:(NSError *)error;
-
-/**
- *  This method indicates when obtaining the location fails
- */
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
-
-@end
-
-/**
- *  <#Description#>
- */
 @interface HACLocationManager : NSObject <CLLocationManagerDelegate, UIAlertViewDelegate>
 
-/**
- *  <#Description#>
- */
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
-/**
- *  <#Description#>
- */
-@property (weak, nonatomic) id<HACLocationManagerDelegate>delegate;
+@property (nonatomic, copy) HACLocationManagerUpdatingCallback locationUpdatedBlock;
+@property (nonatomic, copy) HACLocationManagerEndCallback locationEndBlock;
+@property (nonatomic, copy) HACLocationManagerErrorCallback locationErrorBlock;
 
-/**
- *  <#Description#>
- */
-@property int precision;
-
-/**
- *  <#Description#>
- */
-@property int firstUpdateSeconds;
+@property (nonatomic, copy) HACGeocodingManagerCallback geocodingUpdatedBlock;
+@property (nonatomic, copy) HACGeocodingManagerErrorCallback geocodingErrorBlock;
 
 /**
  *  This method is used to request permissions location, you can use them anywhere you want, 
@@ -108,39 +40,12 @@ typedef void (^ResponseDataCompletionBlock)(NSDictionary *data, NSError *error);
  */
 - (void) requestAuthorizationLocation;
 
-/**
- *  <#Description#>
- *
- *  @param delegate <#delegate description#>
- */
-- (void) startUpdatingLocationWithDelegate:(id)delegate;
+-(void) Location;
 
-/**
- *  <#Description#>
- *
- *  @param distanceFilter <#distanceFilter description#>
- */
-- (void) setDistanceFilter:(double)distanceFilter;
+-(void) Geocoding;
 
-/**
- *  <#Description#>
- *
- *  @param desired <#desired description#>
- */
-- (void) setDesiredAccuary:(double)desired;
-
-/**
- *  <#Description#>
- *
- *  @return <#return value description#>
- */
 - (CLLocation *) getLastSavedLocation;
 
-/**
- *  <#Description#>
- *
- *  @return <#return value description#>
- */
 + (id) sharedInstance;
 
 @end
