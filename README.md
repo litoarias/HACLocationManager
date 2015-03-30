@@ -3,7 +3,7 @@ HACLocationManager is written in Objective-C, very easy to use and effective cla
 Requests are made using blocks. If syntax is very comfortable and intuitive.
 Use singleton design pattern and its compatibility is complete with iOS7 or higher.
 
-##Requirements & Dependecies
+##Requirements and Dependencies
 - iOS >= 7.0
 - ARC enabled
 - CoreLocation Framework
@@ -38,7 +38,7 @@ To request permissions location, when you want independently to any operation. T
 [[HACLocationManager sharedInstance]requestAuthorizationLocation];
 ```
 
-### Obtain user location 
+###Obtain user location 
 Is obtained by locating blocks, based on the location and updates the last location obtained. The first is optional, only if your application requires it.
 
 ##### Set time out
@@ -70,7 +70,7 @@ locationManager.locationErrorBlock = ^(NSError *error){
   NSLog(@"%@", error);
 };
 ```
-### Geocoding
+###Geocoding
 
 ##### Request Geocoding
 ```objective-c
