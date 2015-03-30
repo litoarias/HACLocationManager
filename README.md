@@ -31,11 +31,7 @@ Basically all you need to do is to add single entry in your `Info.plist` file. A
 In the end it should look similar to this:
 
 ![Added entry to Info.plist](https://github.com/litoarias/HACLocationManager/blob/master/ExampleApp/Info_plist.png)
- 
-To request permissions location, when you want independently to any operation. This request must always be performed before applying any other. I recommend do it in your AppDelegate.
-```objective-c
-[[HACLocationManager sharedInstance]requestAuthorizationLocation];
-```
+
 ### Request permissions
 To request permissions location, when you want independently to any operation. This request must always be performed before applying any other. I recommend do it in your AppDelegate.
 ```objective-c
