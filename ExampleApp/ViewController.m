@@ -151,7 +151,7 @@
     [locationManager LocationQuery];
     
     locationManager.locationUpdatedBlock = ^(CLLocation *location){
-        
+        NSLog(@"%@", location);
         weakSelf.section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
         
         [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
