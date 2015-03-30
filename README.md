@@ -79,7 +79,7 @@ locationManager.locationErrorBlock = ^(NSError *error){
 ##### Get Address
 ```objective-c
 locationManager.geocodingBlock = ^(NSDictionary *placemark){
-  NSLog(@"%@", location);
+  NSLog(@"%@", placemark);
 };
 ```
 
