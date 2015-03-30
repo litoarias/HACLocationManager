@@ -24,7 +24,7 @@ Building
 #### iOS 7
 For iOS 7, it is recommended that you provide a description for how your app uses location services by setting a string for the key [`NSLocationUsageDescription`](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW27) in your app's `Info.plist` file.
 
-###iOS 8
+#### iOS 8
 Since iOS 8 it is required to add `NSLocationWhenInUseUsageDescription` key to your `Info.plist` file. Value for this key will be a description of UIAlertView presented to user while asking for location  permission. See [Apple documentation](https://developer.apple.com/library/ios/documentation/corelocation/reference/CLLocationManager_Class/index.html#//apple_ref/occ/instm/CLLocationManager/requestWhenInUseAuthorization) for more info.
 
 Basically all you need to do is to add single entry in your `Info.plist` file. Add key `NSLocationWhenInUseUsageDescription`, and select type `String`. The value you enter for this entry will be shown as text in UIAlertView presented to user first time you try to determine his location.
@@ -41,10 +41,14 @@ To request permissions location, when you want independently to any operation. T
 ### Obtain user location
 Is obtained by locating blocks, based on the location and updates the last location obtained. The first is optional, only if your application requires it.
 
-##### Request get location
+##### Set time out
+You can configure time out for updates in request, for default it's 5 seconds
 ```objective-c
 HACLocationManager *locationManager = [HACLocationManager sharedInstance];
-
+[locationManager setTimeoutUpdating:2];
+```
+##### Request get Location
+```objective-c
 [locationManager LocationQuery];
 ```
 ##### Updates Location
@@ -60,9 +64,29 @@ locationManager.locationEndBlock = ^(CLLocation *location){
 };
 ```
 
-##### Failed to obtain the location
+##### Failed to obtain the Location
 ```objective-c
 locationManager.locationErrorBlock = ^(NSError *error){
   NSLog(@"%@", error);
 };
 ```
+### Geocoding
+```objective-c
+[locationManager GeocodingQuery];
+```
+##### Get Address
+```objective-c
+locationManager.geocodingBlock = ^(NSDictionary *placemark){
+  NSLog(@"%@", location);
+};
+```
+
+##### Failed to obtain Address
+```objective-c
+locationManager.geocodingErrorBlock = ^(NSError *error){
+  NSLog(@"%@", error);
+};
+```
+
+### Reverse Geocoding
+Building
