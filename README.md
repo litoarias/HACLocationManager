@@ -47,7 +47,8 @@ Is obtained by locating blocks, based on the location and updates the last locat
 
 ##### Request get location
 ```objective-c
-HACLocationManager *locationManager;
+HACLocationManager *locationManager = [HACLocationManager sharedInstance];
+
 [locationManager LocationQuery];
 ```
 ##### Updates Location
