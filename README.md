@@ -2,7 +2,6 @@
 HACLocationManager is written in Objective-C, very easy to use and effective class.  
 Requests are made using blocks. If syntax is very comfortable and intuitive.
 Use singleton design pattern and its compatibility is complete with iOS7 or higher.
-# [![Logo](https://github.com/litoarias/HACLocationManager/blob/master/ExampleApp/HACLocationManager.gif)](#)
 ##Requirements and Dependencies
 - iOS >= 7.0
 - ARC enabled
