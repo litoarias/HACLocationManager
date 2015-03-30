@@ -38,7 +38,7 @@ To request permissions location, when you want independently to any operation. T
 [[HACLocationManager sharedInstance]requestAuthorizationLocation];
 ```
 
-### Obtain user location
+### Obtain user location 
 Is obtained by locating blocks, based on the location and updates the last location obtained. The first is optional, only if your application requires it.
 
 ##### Set time out
@@ -71,6 +71,8 @@ locationManager.locationErrorBlock = ^(NSError *error){
 };
 ```
 ### Geocoding
+
+##### Request Geocoding
 ```objective-c
 [locationManager GeocodingQuery];
 ```
