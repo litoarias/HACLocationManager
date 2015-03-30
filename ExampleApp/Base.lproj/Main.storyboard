@@ -33,13 +33,26 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Fc-Qu-UAD">
-                                <rect key="frame" x="16" y="315" width="568" height="30"/>
+                                <rect key="frame" x="10" y="315" width="286" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="QTc-dq-Giy"/>
+                                </constraints>
                                 <state key="normal" title="User location">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="tapUserLocation:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="gTA-T4-hQ8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwi-RA-uYK">
+                                <rect key="frame" x="304" y="315" width="286" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Geocoding">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapGeocoding:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="fj9-Et-G2K"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -48,18 +61,24 @@
                             <constraint firstAttribute="trailingMargin" secondItem="8s1-8f-PdP" secondAttribute="trailing" constant="-16" id="4Gc-IQ-yJz"/>
                             <constraint firstItem="FPa-1l-cId" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="59F-uc-c0J"/>
                             <constraint firstAttribute="trailingMargin" secondItem="FPa-1l-cId" secondAttribute="trailing" constant="-16" id="6Fc-FB-m9s"/>
-                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="centerX" secondItem="8s1-8f-PdP" secondAttribute="centerX" id="8t5-ZS-ZVx"/>
+                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="9H7-Nr-41H"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="xwi-RA-uYK" secondAttribute="trailing" constant="-6" id="AWJ-rV-tbt"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="306" id="AlV-uU-TTm"/>
                             <constraint firstItem="FPa-1l-cId" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" id="G7Z-rS-5VB"/>
-                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="LZX-hl-TS8"/>
-                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="SKi-vU-h90"/>
-                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="3Fc-Qu-UAD" secondAttribute="bottom" constant="14" id="T8H-6k-ije"/>
+                            <constraint firstItem="xwi-RA-uYK" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="JlK-Lo-xaZ"/>
+                            <constraint firstItem="3Fc-Qu-UAD" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-6" id="O3j-WS-4Lj"/>
                             <constraint firstItem="8s1-8f-PdP" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="dmo-rt-hwb"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="3Fc-Qu-UAD" secondAttribute="bottom" constant="14" id="ejH-yV-xvL"/>
                             <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="65" id="elJ-gb-dhe"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="8s1-8f-PdP" secondAttribute="bottom" id="eti-hO-Kpt"/>
+                            <constraint firstItem="xwi-RA-uYK" firstAttribute="width" secondItem="3Fc-Qu-UAD" secondAttribute="width" id="k9j-77-lfX"/>
+                            <constraint firstItem="xwi-RA-uYK" firstAttribute="leading" secondItem="3Fc-Qu-UAD" secondAttribute="trailing" constant="8" id="pE0-kt-9wa"/>
+                            <constraint firstItem="xwi-RA-uYK" firstAttribute="height" secondItem="3Fc-Qu-UAD" secondAttribute="height" id="vec-3W-xAv"/>
+                            <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="xwi-RA-uYK" secondAttribute="bottom" constant="14" id="yYB-7g-Tvn"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="btnGeocoding" destination="xwi-RA-uYK" id="5zJ-9V-29C"/>
                         <outlet property="btnUSerLoc" destination="3Fc-Qu-UAD" id="aOv-mC-msI"/>
                         <outlet property="mapView" destination="FPa-1l-cId" id="4mZ-tA-ESD"/>
                         <outlet property="tableView" destination="8s1-8f-PdP" id="EFU-zO-Y8X"/>

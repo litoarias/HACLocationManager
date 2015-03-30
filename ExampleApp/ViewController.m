@@ -7,16 +7,16 @@
 //
 
 #import "ViewController.h"
-#import "Annotation.h"
 
 #define cellId @"CellId"
 
 @interface ViewController () < MKMapViewDelegate> {
-    NSArray * section_0;
-    NSArray * section_1;
-    UIActivityIndicatorView *ai;
+    
     HACLocationManager *locationManager;
 }
+@property (strong, nonatomic) NSArray * section_0;
+@property (strong, nonatomic) NSArray * section_1;
+@property (strong, nonatomic) UIActivityIndicatorView *ai;
 
 @end
 
@@ -25,8 +25,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    locationManager = [HACLocationManager sharedInstance];
+    _section_0 = @[@""];
+    _section_1 = @[@""];
     
+    locationManager = [HACLocationManager sharedInstance];
+    [locationManager setTimeoutUpdating:2];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
     
@@ -51,33 +54,15 @@
     self.btnUSerLoc.layer.shadowOpacity = 0.6;
     self.btnUSerLoc.layer.masksToBounds = NO;
     
-    [locationManager Location];
     
-//    
-    locationManager.locationUpdatedBlock = ^(CLLocation *location){
-        NSLog(@"UPDATE: %@", location);
-    };
-    locationManager.locationEndBlock = ^(CLLocation *location){
-        NSLog(@"END: %@", location);
-    };
-    locationManager.locationErrorBlock = ^(NSError *error){
-        NSLog(@"ERROR: %@", error);
-    };
+    self.btnGeocoding.layer.shadowColor = [UIColor blackColor].CGColor;
     
+    self.btnGeocoding.layer.shadowOffset = CGSizeMake(4, 10);
+    self.btnGeocoding.layer.cornerRadius = 4.0;
+    self.btnGeocoding.layer.shadowRadius = 5.0;
+    self.btnGeocoding.layer.shadowOpacity = 0.6;
+    self.btnGeocoding.layer.masksToBounds = NO;
     
-    [locationManager Geocoding];
-    
-    locationManager.geocodingUpdatedBlock = ^(NSDictionary *placemark){
-        NSLog(@"%@", placemark);
-    };
-    
-    
-    //    //
-    //    [[HACLocationManager sharedInstance]locationUpdatedBlock = ^(CLLocation * location) {
-    //
-    //        NSLog(@"Location change to: %@", location);
-    //
-    //    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -94,11 +79,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section==0) {
-        
-        return section_0.count;
+        return _section_0.count;
     }else if(section ==1){
-        
-        return section_1.count;
+        return _section_1.count;
     }else{
         return 0;
     }
@@ -112,11 +95,11 @@
     
     switch (indexPath.section) {
         case 0:
-            cell.textLabel.text = section_0[indexPath.row];
+            cell.textLabel.text = _section_0[indexPath.row];
             break;
             
         case 1:
-            cell.textLabel.text = section_1[indexPath.row];
+            cell.textLabel.text = _section_1[indexPath.row];
             break;
     }
     
@@ -162,7 +145,90 @@
 - (IBAction)tapUserLocation:(id)sender {
     [self startActivity];
     [self disabledButtons];
-    //    [[HACLocationManager sharedInstance]startUpdatingLocationWithDelegate:self];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [locationManager LocationQuery];
+    
+    locationManager.locationUpdatedBlock = ^(CLLocation *location){
+        
+        weakSelf.section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
+        
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+    };
+    
+    
+    locationManager.locationEndBlock = ^(CLLocation *location){
+        
+        weakSelf.section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
+        
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        
+        [weakSelf.ai stopAnimating];
+        [weakSelf enableButtons];
+        
+        [weakSelf mapZoomWithMap:weakSelf.mapView userLocation:location];
+        
+    };
+    
+    
+    
+    locationManager.locationErrorBlock = ^(NSError *error){
+        
+        [[[UIAlertView alloc]initWithTitle:@"Location Error"
+                                   message:[error localizedDescription]
+                                  delegate:nil
+                         cancelButtonTitle:@"Ok"
+                         otherButtonTitles: nil]show];
+        
+        
+        [weakSelf.ai stopAnimating];
+        [weakSelf enableButtons];
+    };
+    
+    
+}
+
+- (IBAction)tapGeocoding:(id)sender {
+    [self startActivity];
+    [self disabledButtons];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [locationManager GeocodingQuery];
+    
+    locationManager.geocodingBlock = ^(NSDictionary *placemark){
+        
+        weakSelf.section_1 = (NSArray *)[placemark valueForKey:@"FormattedAddressLines"];
+        
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        
+        [weakSelf.ai stopAnimating];
+        [weakSelf enableButtons];
+        
+    };
+    
+    
+    locationManager.geocodingErrorBlock = ^(NSError *error){
+        
+        [[[UIAlertView alloc]initWithTitle:@"Geocoding Error"
+                                   message:[error localizedDescription]
+                                  delegate:nil
+                         cancelButtonTitle:@"Ok"
+                         otherButtonTitles: nil]show];
+        
+        
+        [weakSelf.ai stopAnimating];
+        [weakSelf enableButtons];
+        
+    };
+    
 }
 
 -(void)mapZoomWithMap:(MKMapView *)map userLocation:(CLLocation *)userLoc{
@@ -184,81 +250,29 @@
 -(void)startActivity{
     
     //Create and add the Activity Indicator to splashView
-    ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    ai.backgroundColor = [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:.9];
-    ai.alpha = 1.0;
-    ai.center = self.view.center;
-    ai.hidesWhenStopped = YES;
-    [self.view addSubview:ai];
-    [ai startAnimating];
+    _ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _ai.backgroundColor = [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:.9];
+    _ai.alpha = 1.0;
+    _ai.center = self.view.center;
+    _ai.hidesWhenStopped = YES;
+    [self.view addSubview:_ai];
+    [_ai startAnimating];
 }
-
-# pragma mark - HACLocationManager
--(void)didFinishFirstUpdateLocation:(CLLocation *)location{
-    
-    section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
-    
-    [self.tableView reloadData];
-}
-
-
 
 -(void) didUpdatingLocation:(CLLocation *)location{
     [self mapZoomWithMap:self.mapView userLocation:location];
 }
 
 
--(void)didFinishGetAddress:(NSDictionary *)placemark location:(CLLocation *)location{
-    
-    section_1 = (NSArray *)[placemark valueForKey:@"FormattedAddressLines"];
-    [self enableButtons];
-    
-    section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
-    
-    
-    [self.tableView reloadData];
-    
-    [ai stopAnimating];
-    
-}
-
--(void)didFailGettingLocationWithError:(NSError *)error{
-    NSLog(@"Error Location: %@", [error localizedDescription]);
-    [[[UIAlertView alloc]initWithTitle:@"Error" message:[error localizedDescription]  delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil]show];
-    [ai stopAnimating];
-    [self enableButtons];
-}
-
--(void)didFailGettingAddressWithError:(NSError *)error{
-    NSLog(@"Error al coger la dirección\nError: %@", [error localizedDescription]);
-    [ai stopAnimating];
-    [self enableButtons];
-}
-
-#pragma mark - MKMapViewDelegate
-//-(MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-////
-////    if ([annotation isKindOfClass:[MKUserLocation class]])
-////    {
-////        annotation.image = [UIImage imageNamed:@""];
-////    }
-//
-//    MKPinAnnotationView *MyPin=[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
-//
-//    MyPin.draggable = YES;
-//    MyPin.animatesDrop=TRUE;
-//    MyPin.canShowCallout = YES;
-//    MyPin.highlighted = NO;
-//
-//    return MyPin;
-//}
 
 -(void)enableButtons{
     self.btnUSerLoc.enabled = YES;
+    self.btnGeocoding.enabled = YES;
 }
 
 -(void)disabledButtons{
     self.btnUSerLoc.enabled = NO;
+    self.btnGeocoding.enabled = NO;
 }
 
 @end

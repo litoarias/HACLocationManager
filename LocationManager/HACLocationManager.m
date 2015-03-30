@@ -16,7 +16,17 @@
     CLLocation *_location;
 }
 
+@synthesize timeoutUpdating = _timeoutUpdating;
 
+# pragma mark - Getters
+-(NSInteger)timeoutUpdating{
+    return _timeoutUpdating;
+}
+
+# pragma mark - Setters
+- (void) setTimeoutUpdating:(NSInteger)timeoutUpdating {
+    _timeoutUpdating = timeoutUpdating;
+}
 
 # pragma mark - Life cycle
 
@@ -35,7 +45,7 @@
         _locationManager.delegate = self;
         _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
-        
+        _timeoutUpdating = kDefaultTimeOut;
     }
     return self;
 }
@@ -78,12 +88,12 @@
     [self.locationManager stopUpdatingLocation];
 }
 
--(void) Location{
+-(void) LocationQuery{
     [self startUpdatingLocation];
     _isLocation=YES;
 }
 
--(void) Geocoding{
+-(void) GeocodingQuery{
     [self startUpdatingLocation];
     _isGeocoding = YES;
     
@@ -99,7 +109,6 @@
 
 
 # pragma mark - Private Methods
-
 
 - (void) startUpdatingLocation{
     
@@ -244,8 +253,8 @@
                 
                 CLPlacemark *placemark = [placemarks objectAtIndex:0];
                 
-                if(self.geocodingUpdatedBlock) {
-                    self.geocodingUpdatedBlock([placemark.addressDictionary mutableCopy]);
+                if(self.geocodingBlock) {
+                    self.geocodingBlock([placemark.addressDictionary mutableCopy]);
                 }
                 
             }
@@ -304,7 +313,7 @@
 -(void)startTimer
 {
     [self stopTimer];
-    _queryingTimer = [NSTimer scheduledTimerWithTimeInterval:kDefaultTimeOut
+    _queryingTimer = [NSTimer scheduledTimerWithTimeInterval:_timeoutUpdating
                                                       target:self
                                                     selector:@selector(timerPassed)
                                                     userInfo:nil
@@ -341,6 +350,137 @@
     
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-(IBAction) onRGeoWithText:(NSString*)textLocation
+{
+    
+    
+    CLCircularRegion *currentRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
+                                                                        radius:25000
+                                                                    identifier:@"NEARBY"];
+    
+    //    CLRegion * currentRegion = [[CLRegion alloc] initCircularRegionWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
+    //                                                                       radius:25000 identifier:@"NEARBY"];
+    CLGeocoder *geocoder = [CLGeocoder new];
+    [geocoder geocodeAddressString:textLocation inRegion:currentRegion completionHandler:^(NSArray *placemarks, NSError *error)
+     {
+         if (error)
+         {
+             //             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.description delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             
+             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Dirección errónea, imposible de localizar." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             [alert show];
+             
+             
+             return;
+         }
+         
+         if (!placemarks)
+         {
+             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No placemarks" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             [alert show];
+             
+             
+             
+             return;
+         }
+         
+         
+         if(placemarks.count > 1){
+             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Varias coincidencias" message:@"Han salido varios resultados, matiza mejor la dirección. Vuelve a intertarlo" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+             [alert show];
+             
+             return;
+         }
+         for (int i = 0; i < [placemarks count]; i++)
+         {
+             CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
+             
+             //             NSLog(@"%@",[thisPlacemark valueForKey:@"administrativeArea"]);// Comunidad
+             //             NSLog(@"%@",[thisPlacemark valueForKey:@"locality"]);// localidad
+             //             //            NSLog(@"%@",[thisPlacemark valueForKey:@"postCode"]);// CP
+             //             NSLog(@"%@",[thisPlacemark valueForKey:@"subAdministrativeArea"]);// Provincia
+             //             NSLog(@"%@",[thisPlacemark valueForKey:@"subThoroughfare"]);// Número
+             //             NSLog(@"%@",[thisPlacemark valueForKey:@"thoroughfare"]);// Calle
+             //             NSLog(@"%f",thisPlacemark.location.coordinate.latitude);// Calle
+             //             NSLog(@"%f",thisPlacemark.location.coordinate.longitude);// Calle
+             
+             //             lat = thisPlacemark.location.coordinate.latitude;
+             //             lng = thisPlacemark.location.coordinate.longitude;
+             
+             //             NSString *numero = [thisPlacemark valueForKey:@"subThoroughfare"] == nil ? @"" : [thisPlacemark valueForKey:@"subThoroughfare"];
+             
+             if([thisPlacemark valueForKey:@"administrativeArea"] == nil ||
+                [thisPlacemark valueForKey:@"locality"] == nil ||
+                [thisPlacemark valueForKey:@"subAdministrativeArea"] == nil ||
+                [thisPlacemark valueForKey:@"thoroughfare"] == nil ||
+                thisPlacemark.location.coordinate.latitude == 0.0 ||
+                thisPlacemark.location.coordinate.longitude == 0.0){
+                 
+                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No se ha podido establecer la dirección porque los datos no son válidos, vuelve a intertarlo." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [alert show];
+                 
+                 
+                 return;
+             }
+             
+             //
+             //             self.fieldAddressComplet.text = [NSString stringWithFormat:@"%@ %@, %@", [thisPlacemark valueForKey:@"thoroughfare"],numero,[thisPlacemark valueForKey:@"locality"]];
+             //             self.fieldProvincia.text = [thisPlacemark valueForKey:@"subAdministrativeArea"];
+             //             self.fieldComunidad.text = [thisPlacemark valueForKey:@"administrativeArea"];
+             //            NSLog(@"%@",thisPlacemark);
+             //
+             //             MKPointAnnotation *annotationPoint = [[MKPointAnnotation alloc] init];
+             //             annotationPoint.coordinate = thisPlacemark.location.coordinate;
+             //             annotationPoint.title = thisPlacemark.name;
+             //             [self.map addAnnotation:annotationPoint];
+             //             [self.map setCenterCoordinate:thisPlacemark.location.coordinate];
+             //             MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance (thisPlacemark.location.coordinate, 25000, 25000);
+             //             [self.map setRegion:region animated:NO];
+             
+         }
+         
+         
+     }];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //switch (self.locationErrorCode)
 //{
