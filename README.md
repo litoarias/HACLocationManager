@@ -36,16 +36,16 @@ To request permissions location, when you want independently to any operation. T
 ```objective-c
 [[HACLocationManager sharedInstance]requestAuthorizationLocation];
 ```
+##### Instance class & set time out
+You can configure time out for updates in request, for default it's 5 seconds
+```objective-c
+HACLocationManager *locationManager = [HACLocationManager sharedInstance];
+locationManager.timeoutUpdating = 6;
+```
 
 ###Obtain user location 
 Is obtained by locating blocks, based on the location and updates the last location obtained. The first is optional, only if your application requires it.
 
-##### Set time out
-You can configure time out for updates in request, for default it's 5 seconds
-```objective-c
-HACLocationManager *locationManager = [HACLocationManager sharedInstance];
-[locationManager setTimeoutUpdating:2];
-```
 ##### Request get Location
 ```objective-c
 [locationManager LocationQuery];
@@ -90,4 +90,30 @@ locationManager.geocodingErrorBlock = ^(NSError *error){
 ```
 
 ### Reverse Geocoding
-Building
+##### Request Reverse Geocoding
+```objective-c
+[locationManager ReverseGeocodingQueryWithText:@"1755 Embarcadero Road Palo Alto, CA 94303"];
+```
+##### Response
+Can multiple placemarks are received, so an array is returned 
+```objective-c
+locationManager.reverseGeocodingBlock = ^(NSArray *placemarks){
+  for (int i = 0; i < [placemarks count]; i++)
+  {
+    CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
+    NSLog(@"%@", thisPlacemark);
+  }
+};
+```
+##### Failed block
+```objective-c
+locationManager.reverseGeocodingErrorBlock = ^(NSError *error){
+  NSLog("%@", error);
+};
+```
+
+### Get last stored location
+You can also get the latest location of the user stored persistently for those cases in which the location is not available.
+```objective-c
+NSLog(@"%@",locationManager.getLastSavedLocation);
+```
