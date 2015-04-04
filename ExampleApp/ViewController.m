@@ -7,13 +7,14 @@
 //
 
 #import "ViewController.h"
+#import "Annotation.h"
 
 #define cellId @"CellId"
 
-@interface ViewController () < MKMapViewDelegate> {
-    
+@interface ViewController () < MKMapViewDelegate, UISearchBarDelegate> {
     HACLocationManager *locationManager;
 }
+
 @property (strong, nonatomic) NSArray * section_0;
 @property (strong, nonatomic) NSArray * section_1;
 @property (strong, nonatomic) UIActivityIndicatorView *ai;
@@ -29,10 +30,12 @@
     _section_1 = @[@""];
     
     locationManager = [HACLocationManager sharedInstance];
-    [locationManager setTimeoutUpdating:2];
+    locationManager.timeoutUpdating = 6;
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
     
+    
+    NSLog(@"%@",locationManager.getLastSavedLocation);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -140,9 +143,34 @@
     return view;
 }
 
+# pragma mark - MKMapViewDelegate
+-(MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    
+    if([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+    
+    MKPinAnnotationView *MyPin=[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"current"];
+    
+    MyPin.animatesDrop=TRUE;
+    MyPin.pinColor = MKPinAnnotationColorPurple;
+    MyPin.highlighted = NO;
+    
+    return MyPin;
+}
+
+# pragma mark - UISearchBarDelegate
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [self tapReverseGeocoding:searchBar];
+    
+    
+    [searchBar resignFirstResponder];
+}
+
 # pragma mark - IBActions
 
 - (IBAction)tapUserLocation:(id)sender {
+    
     [self startActivity];
     [self disabledButtons];
     
@@ -151,7 +179,8 @@
     [locationManager LocationQuery];
     
     locationManager.locationUpdatedBlock = ^(CLLocation *location){
-        NSLog(@"%@", location);
+        
+        
         weakSelf.section_0 = @[[NSString stringWithFormat:@"Lat: %f - Lng: %f", location.coordinate.latitude, location.coordinate.longitude]];
         
         [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
@@ -231,6 +260,66 @@
     
 }
 
+
+-(IBAction)tapReverseGeocoding:(id)sender{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    UISearchBar *search = sender;
+    
+    [locationManager ReverseGeocodingQueryWithText:search.text];
+    
+    locationManager.reverseGeocodingBlock = ^(NSArray *placemarks){
+        
+        NSMutableArray *annotations = [NSMutableArray new];
+        
+        for (int i = 0; i < [placemarks count]; i++)
+        {
+            CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
+            
+            
+            MKCoordinateRegion Bridge = { {0.0, 0.0} , {0.0, 0.0} };
+            Bridge.center.latitude = thisPlacemark.location.coordinate.latitude;
+            Bridge.center.longitude =thisPlacemark.location.coordinate.longitude;
+            Bridge.span.longitudeDelta = 0.01f;
+            Bridge.span.latitudeDelta = 0.01f;
+            
+            Annotation *ann = [[Annotation alloc] init];
+            ann.title = @"Localidad: %@",[thisPlacemark valueForKey:@"locality"];
+            ann.subtitle = @"Calle: %@",[thisPlacemark valueForKey:@"thoroughfare"];
+            ann.coordinate = Bridge.center;
+            
+            [annotations addObject:ann];
+            
+//            NSLog(@"Comunidad: %@",[thisPlacemark valueForKey:@"administrativeArea"]);// Comunidad
+//            NSLog(@"Localidad: %@",[thisPlacemark valueForKey:@"locality"]);// localidad
+//            NSLog(@"Provincia: %@",[thisPlacemark valueForKey:@"subAdministrativeArea"]);// Provincia
+//            NSLog(@"Número: %@",[thisPlacemark valueForKey:@"subThoroughfare"]);// Número
+//            NSLog(@"Calle: %@",[thisPlacemark valueForKey:@"thoroughfare"]);// Calle
+            
+        }
+        
+        [weakSelf.mapView addAnnotations:annotations];
+        Annotation *an = [annotations lastObject];
+        CLLocation *loc = [[CLLocation alloc] initWithLatitude:an.coordinate.latitude
+                                                     longitude:an.coordinate.longitude];
+        [weakSelf mapZoomWithMap:weakSelf.mapView userLocation:loc];
+       
+    };
+    
+    locationManager.reverseGeocodingErrorBlock = ^(NSError *error){
+        
+        [[[UIAlertView alloc]initWithTitle:@"Reverse Geocoding Error"
+                                   message:[error localizedDescription]
+                                  delegate:nil
+                         cancelButtonTitle:@"Ok"
+                         otherButtonTitles: nil]show];
+    };
+    
+}
+
+# pragma mark - Private Methods
+
 -(void)mapZoomWithMap:(MKMapView *)map userLocation:(CLLocation *)userLoc{
     
     MKCoordinateRegion region;
@@ -257,10 +346,6 @@
     _ai.hidesWhenStopped = YES;
     [self.view addSubview:_ai];
     [_ai startAnimating];
-}
-
--(void) didUpdatingLocation:(CLLocation *)location{
-    [self mapZoomWithMap:self.mapView userLocation:location];
 }
 
 

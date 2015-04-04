@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4104A0861AC965A6004FCD52 /* HACLocationManager.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4104A0851AC965A6004FCD52 /* HACLocationManager.gif */; };
 		4110F7141AC73A00007B0ACB /* github.png in Resources */ = {isa = PBXBuildFile; fileRef = 4110F7131AC73A00007B0ACB /* github.png */; };
 		4110F7161AC73FA5007B0ACB /* Info_plist.png in Resources */ = {isa = PBXBuildFile; fileRef = 4110F7151AC73FA5007B0ACB /* Info_plist.png */; };
+		4114B5E01AD09746004EBB93 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4114B5DF1AD09746004EBB93 /* Annotation.m */; };
 		416AB4751AC34F4C0028DC4F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 416AB4741AC34F4C0028DC4F /* CoreLocation.framework */; };
 		E3107B841AC2D57B007577F3 /* LocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B831AC2D57B007577F3 /* LocationManagerTests.m */; };
 		E3107B901AC2D6F7007577F3 /* HACLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */; };
@@ -33,9 +33,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4104A0851AC965A6004FCD52 /* HACLocationManager.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = HACLocationManager.gif; sourceTree = "<group>"; };
 		4110F7131AC73A00007B0ACB /* github.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = github.png; sourceTree = "<group>"; };
 		4110F7151AC73FA5007B0ACB /* Info_plist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Info_plist.png; sourceTree = "<group>"; };
+		4114B5DE1AD09746004EBB93 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
+		4114B5DF1AD09746004EBB93 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		416AB4741AC34F4C0028DC4F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E3107B641AC2D57B007577F3 /* LocationManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3107B7D1AC2D57B007577F3 /* LocationManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocationManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +132,8 @@
 				E3107B9C1AC2DB86007577F3 /* ViewController.m */,
 				E3107B941AC2DB86007577F3 /* LaunchScreen.xib */,
 				E3107B961AC2DB86007577F3 /* Main.storyboard */,
+				4114B5DE1AD09746004EBB93 /* Annotation.h */,
+				4114B5DF1AD09746004EBB93 /* Annotation.m */,
 				E3107BA41AC2DBD0007577F3 /* Supporting Files */,
 			);
 			path = ExampleApp;
@@ -139,7 +142,6 @@
 		E3107BA41AC2DBD0007577F3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4104A0851AC965A6004FCD52 /* HACLocationManager.gif */,
 				4110F7151AC73FA5007B0ACB /* Info_plist.png */,
 				4110F7131AC73A00007B0ACB /* github.png */,
 				E3107B981AC2DB86007577F3 /* Images.xcassets */,
@@ -233,7 +235,6 @@
 				4110F7161AC73FA5007B0ACB /* Info_plist.png in Resources */,
 				4110F7141AC73A00007B0ACB /* github.png in Resources */,
 				E3107BA01AC2DB86007577F3 /* Images.xcassets in Resources */,
-				4104A0861AC965A6004FCD52 /* HACLocationManager.gif in Resources */,
 				E3107B9E1AC2DB86007577F3 /* LaunchScreen.xib in Resources */,
 				E3107B9F1AC2DB86007577F3 /* Main.storyboard in Resources */,
 			);
@@ -253,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4114B5E01AD09746004EBB93 /* Annotation.m in Sources */,
 				E3107B9D1AC2DB86007577F3 /* AppDelegate.m in Sources */,
 				E3107BA21AC2DB86007577F3 /* main.m in Sources */,
 				E3107BA31AC2DB86007577F3 /* ViewController.m in Sources */,

@@ -55,6 +55,13 @@
                                     <action selector="tapGeocoding:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="fj9-Et-G2K"/>
                                 </connections>
                             </button>
+                            <searchBar contentMode="redraw" placeholder="Ex: 1755 Embarcadero Road Palo Alto, CA 94303" translatesAutoresizingMaskIntoConstraints="NO" id="8bd-M5-gg9">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="ZMu-xZ-7ix"/>
+                                </connections>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -64,10 +71,13 @@
                             <constraint firstItem="3Fc-Qu-UAD" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="9H7-Nr-41H"/>
                             <constraint firstAttribute="trailingMargin" secondItem="xwi-RA-uYK" secondAttribute="trailing" constant="-6" id="AWJ-rV-tbt"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="306" id="AlV-uU-TTm"/>
+                            <constraint firstItem="8bd-M5-gg9" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="top" constant="20" id="Ecm-qt-VVw"/>
                             <constraint firstItem="FPa-1l-cId" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" id="G7Z-rS-5VB"/>
                             <constraint firstItem="xwi-RA-uYK" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="21" id="JlK-Lo-xaZ"/>
                             <constraint firstItem="3Fc-Qu-UAD" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-6" id="O3j-WS-4Lj"/>
+                            <constraint firstItem="8bd-M5-gg9" firstAttribute="trailing" secondItem="FPa-1l-cId" secondAttribute="trailing" id="Zzo-Yj-oMp"/>
                             <constraint firstItem="8s1-8f-PdP" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="dmo-rt-hwb"/>
+                            <constraint firstItem="8bd-M5-gg9" firstAttribute="leading" secondItem="FPa-1l-cId" secondAttribute="leading" id="e6F-eE-Myt"/>
                             <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="3Fc-Qu-UAD" secondAttribute="bottom" constant="14" id="ejH-yV-xvL"/>
                             <constraint firstItem="8s1-8f-PdP" firstAttribute="top" secondItem="FPa-1l-cId" secondAttribute="bottom" constant="65" id="elJ-gb-dhe"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="8s1-8f-PdP" secondAttribute="bottom" id="eti-hO-Kpt"/>

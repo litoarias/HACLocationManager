@@ -17,7 +17,7 @@
 
 
 
-# pragma mark - LOCATION -> Manages without blocks the various events on location. Updates , last update and error event.
+// LOCATION -> Manages without blocks the various events on location. Updates , last update and error event.
 /**
  *  Updating location, previous timeout
  *
@@ -41,7 +41,7 @@ typedef void (^HACLocationManagerErrorCallback)(NSError *);
 
 
 
-# pragma mark - GEOCODING -> Manages without blocks the various events on Geocoding. Callback or error event.
+// GEOCODING -> Manages without blocks the various events on Geocoding. Callback or error event.
 /**
  *  Callback success
  *
@@ -56,17 +56,33 @@ typedef void (^HACGeocodingManagerCallback)(NSDictionary *);
  */
 typedef void (^HACGeocodingManagerErrorCallback)(NSError *);
 
+// REVERSE GEOCODING -> Manages without blocks the various events on Geocoding. Callback or error event.
+/**
+ *  Callback success
+ *
+ *  @param NSDictionary of placemark
+ */
+typedef void (^HACReverseGeocodingManagerCallback)(NSArray *);
+
+/**
+ *  Error callback
+ *
+ *  @param NSError of Description error
+ */
+typedef void (^HACReverseGeocodingManagerErrorCallback)(NSError *);
+
 
 @interface HACLocationManager : NSObject <CLLocationManagerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) NSInteger timeoutUpdating;
-
 @property (nonatomic, copy) HACLocationManagerUpdatingCallback locationUpdatedBlock;
 @property (nonatomic, copy) HACLocationManagerEndCallback locationEndBlock;
 @property (nonatomic, copy) HACLocationManagerErrorCallback locationErrorBlock;
 @property (nonatomic, copy) HACGeocodingManagerCallback geocodingBlock;
 @property (nonatomic, copy) HACGeocodingManagerErrorCallback geocodingErrorBlock;
+@property (nonatomic, copy) HACReverseGeocodingManagerCallback reverseGeocodingBlock;
+@property (nonatomic, copy) HACReverseGeocodingManagerErrorCallback reverseGeocodingErrorBlock;
 
 
 /**
@@ -78,6 +94,8 @@ typedef void (^HACGeocodingManagerErrorCallback)(NSError *);
 - (void) LocationQuery;
 
 - (void) GeocodingQuery;
+
+- (void) ReverseGeocodingQueryWithText:(NSString *)addressText;
 
 - (CLLocation *) getLastSavedLocation;
 

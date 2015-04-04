@@ -94,14 +94,12 @@
 
 -(void) GeocodingQuery{
     [self startUpdatingLocation];
-    _isGeocoding = YES;
+    _isGeocoding=YES;
     
 }
 
 - (CLLocation *) getLastSavedLocation{
-    
     NSDictionary *userLoc = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_LOCATION];
-    
     return [[CLLocation alloc] initWithLatitude:[[userLoc objectForKey:@"lat"]doubleValue]
                                       longitude:[[userLoc objectForKey:@"lng"]doubleValue]];
 }
@@ -140,7 +138,6 @@
 
 -(void)locationManagerDidUpdateToLocation:(CLLocation *)newLocation
 {
-    
     if( newLocation == nil || newLocation.horizontalAccuracy < 0 )
     {
         return;
@@ -317,136 +314,49 @@
 -(void)timerPassed
 {
     [self stopTimer];
+    
     [self.locationManager stopUpdatingLocation];
+    
     if (_isLocation) {
         if (self.locationEndBlock) {
             self.locationEndBlock(_location);
         }
+        _isLocation=NO;
     }
+    
     if(_isGeocoding){
         [self getAddressFromLocation:_location];
         _isGeocoding=NO;
     }
     
-    
 }
 
-
-
-
-
-
-//
-//
-//
-//
-//
-//
-//-(IBAction) onRGeoWithText:(NSString*)textLocation
-//{
-//    
-//    
-//    CLCircularRegion *currentRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
-//                                                                        radius:25000
-//                                                                    identifier:@"NEARBY"];
-//    
-//    //    CLRegion * currentRegion = [[CLRegion alloc] initCircularRegionWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
-//    //                                                                       radius:25000 identifier:@"NEARBY"];
-//    CLGeocoder *geocoder = [CLGeocoder new];
-//    [geocoder geocodeAddressString:textLocation inRegion:currentRegion completionHandler:^(NSArray *placemarks, NSError *error)
-//     {
-//         if (error)
-//         {
-//             //             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.description delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//             
-//             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Dirección errónea, imposible de localizar." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//             [alert show];
-//             
-//             
-//             return;
-//         }
-//         
-//         if (!placemarks)
-//         {
-//             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No placemarks" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//             [alert show];
-//             
-//             
-//             
-//             return;
-//         }
-//         
-//         
-//         if(placemarks.count > 1){
-//             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Varias coincidencias" message:@"Han salido varios resultados, matiza mejor la dirección. Vuelve a intertarlo" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//             [alert show];
-//             
-//             return;
-//         }
-//         for (int i = 0; i < [placemarks count]; i++)
-//         {
-//             CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
-//             
-//             //             NSLog(@"%@",[thisPlacemark valueForKey:@"administrativeArea"]);// Comunidad
-//             //             NSLog(@"%@",[thisPlacemark valueForKey:@"locality"]);// localidad
-//             //             //            NSLog(@"%@",[thisPlacemark valueForKey:@"postCode"]);// CP
-//             //             NSLog(@"%@",[thisPlacemark valueForKey:@"subAdministrativeArea"]);// Provincia
-//             //             NSLog(@"%@",[thisPlacemark valueForKey:@"subThoroughfare"]);// Número
-//             //             NSLog(@"%@",[thisPlacemark valueForKey:@"thoroughfare"]);// Calle
-//             //             NSLog(@"%f",thisPlacemark.location.coordinate.latitude);// Calle
-//             //             NSLog(@"%f",thisPlacemark.location.coordinate.longitude);// Calle
-//             
-//             //             lat = thisPlacemark.location.coordinate.latitude;
-//             //             lng = thisPlacemark.location.coordinate.longitude;
-//             
-//             //             NSString *numero = [thisPlacemark valueForKey:@"subThoroughfare"] == nil ? @"" : [thisPlacemark valueForKey:@"subThoroughfare"];
-//             
-//             if([thisPlacemark valueForKey:@"administrativeArea"] == nil ||
-//                [thisPlacemark valueForKey:@"locality"] == nil ||
-//                [thisPlacemark valueForKey:@"subAdministrativeArea"] == nil ||
-//                [thisPlacemark valueForKey:@"thoroughfare"] == nil ||
-//                thisPlacemark.location.coordinate.latitude == 0.0 ||
-//                thisPlacemark.location.coordinate.longitude == 0.0){
-//                 
-//                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No se ha podido establecer la dirección porque los datos no son válidos, vuelve a intertarlo." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                 [alert show];
-//                 
-//                 
-//                 return;
-//             }
-//             
-//             //
-//             //             self.fieldAddressComplet.text = [NSString stringWithFormat:@"%@ %@, %@", [thisPlacemark valueForKey:@"thoroughfare"],numero,[thisPlacemark valueForKey:@"locality"]];
-//             //             self.fieldProvincia.text = [thisPlacemark valueForKey:@"subAdministrativeArea"];
-//             //             self.fieldComunidad.text = [thisPlacemark valueForKey:@"administrativeArea"];
-//             //            NSLog(@"%@",thisPlacemark);
-//             //
-//             //             MKPointAnnotation *annotationPoint = [[MKPointAnnotation alloc] init];
-//             //             annotationPoint.coordinate = thisPlacemark.location.coordinate;
-//             //             annotationPoint.title = thisPlacemark.name;
-//             //             [self.map addAnnotation:annotationPoint];
-//             //             [self.map setCenterCoordinate:thisPlacemark.location.coordinate];
-//             //             MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance (thisPlacemark.location.coordinate, 25000, 25000);
-//             //             [self.map setRegion:region animated:NO];
-//             
-//         }
-//         
-//         
-//     }];
-//}
-//
-//
-
-//switch (self.locationErrorCode)
-//{
-//    case kCLErrorLocationUnknown:
-//        [self alert:@"Couldn't figure out where this photo was taken (yet)."]; break;
-//    case kCLErrorDenied:
-//        [self alert:@"Location Services disabled under Privacy in Settings application."]; break;
-//    case kCLErrorNetwork:
-//        [self alert:@"Can't figure out where this photo is being taken.  Verify your connection to the network."]; break;
-//    default:
-//        [self alert:@"Cant figure out where this photo is being taken, sorry."]; break;
-//}
+-(void) ReverseGeocodingQueryWithText:(NSString *)addressText
+{
+    CLCircularRegion *currentRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
+                                                                        radius:25000
+                                                                    identifier:@"NEARBY"];
+    
+    CLGeocoder *geocoder = [CLGeocoder new];
+    
+    [geocoder geocodeAddressString:addressText inRegion:currentRegion completionHandler:^(NSArray *placemarks, NSError *error){
+        if (error)
+        {
+            self.reverseGeocodingErrorBlock(error);
+            
+            return;
+        }
+        
+        if (!placemarks)
+        {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No placemarks" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            
+            return;
+        }
+        
+        self.reverseGeocodingBlock(placemarks);
+    }];
+}
 
 @end
