@@ -2,6 +2,8 @@
 HACLocationManager is written in Objective-C, very easy to use and effective class.  
 Requests are made using blocks. If syntax is very comfortable and intuitive.
 Use singleton design pattern and its compatibility is complete with iOS7 or higher.
+This class is not for use as GPS, only for obtain user location in any moment and get geocoding and reverse geocoding.
+
 ##Requirements and Dependencies
 - iOS >= 7.0
 - ARC enabled
@@ -98,10 +100,9 @@ locationManager.geocodingErrorBlock = ^(NSError *error){
 Can multiple placemarks are received, so an array is returned 
 ```objective-c
 locationManager.reverseGeocodingBlock = ^(NSArray *placemarks){
-  for (int i = 0; i < [placemarks count]; i++)
-  {
-    CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
-    NSLog(@"%@", thisPlacemark);
+  for (int i = 0; i < [placemarks count]; i++){
+     CLPlacemark * thisPlacemark = [placemarks objectAtIndex:i];
+     NSLog(@"%@", thisPlacemark);
   }
 };
 ```
@@ -118,7 +119,7 @@ You can also get the latest location of the user stored persistently for those c
 NSLog(@"%@",locationManager.getLastSavedLocation);
 ```
 
-##### Enjoy :D
+Enjoy :D
 
 ## Contributing
 
