@@ -73,11 +73,11 @@ locationManager.locationErrorBlock = ^(NSError *error){
 ```
 ###Geocoding
 
-##### Request Geocoding
+##### Request Geocoding of User Location
 ```objective-c
 [locationManager GeocodingQuery];
 ```
-##### Get Address
+##### Get Address of User
 ```objective-c
 locationManager.geocodingBlock = ^(NSDictionary *placemark){
   NSLog(@"%@", placemark);
