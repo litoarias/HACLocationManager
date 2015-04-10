@@ -220,11 +220,16 @@
     if (alertView.tag==1001){
         if (buttonIndex == 1) {
             // Send the user to the Settings for this app
-            NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [[UIApplication sharedApplication] openURL:settingsURL];
+            if (&UIApplicationOpenSettingsURLString != NULL) {
+                NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                if ([[UIApplication sharedApplication]canOpenURL:settingsURL]) {
+                    [[UIApplication sharedApplication] openURL:settingsURL];
+                }
+            }
         }
     }
 }
+
 
 
 - (void) getAddressFromLocation:(CLLocation *)location
