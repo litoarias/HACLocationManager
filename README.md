@@ -12,7 +12,8 @@ This class is not for use as GPS, only for obtain user location in any moment an
 ##Installation
 
 ####CocoaPods:
-Building
+
+    	pod 'HACLocationManager'
 
 ####Manual install:
 - Copy `HACLocationManager.h` and `HACLocationManager.m` to your project
