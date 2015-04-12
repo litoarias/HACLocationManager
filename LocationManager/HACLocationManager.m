@@ -44,7 +44,7 @@
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         _locationManager.distanceFilter = kCLDistanceFilterNone;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _timeoutUpdating = kDefaultTimeOut;
     }
     return self;

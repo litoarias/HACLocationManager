@@ -35,7 +35,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:cellId];
     
     
-    NSLog(@"%@",locationManager.getLastSavedLocation);
+    NSLog(@"Last saved location: %@",locationManager.getLastSavedLocation);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
