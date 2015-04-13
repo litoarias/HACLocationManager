@@ -79,9 +79,19 @@ locationManager.locationErrorBlock = ^(NSError *error){
 [locationManager GeocodingQuery];
 ```
 ##### Get Address of User
+Can multiple placemarks are received, so an array is returned 
 ```objective-c
-locationManager.geocodingBlock = ^(NSDictionary *placemark){
-  NSLog(@"%@", placemark);
+locationManager.geocodingBlock = ^(NSArray *placemarks){
+    
+    CLPlacemark *placemark = (CLPlacemark *)placemarks[0];
+    
+    NSLog(@"%@",[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+       placemark.subThoroughfare ? placemark.subThoroughfare : @"",
+       placemark.thoroughfare ? placemark.thoroughfare : @"",
+       placemark.postalCode ? placemark.postalCode : @"",
+       placemark.locality ? placemark.locality : @"",
+       placemark.administrativeArea ? placemark.administrativeArea : @"",
+       placemark.country ? placemark.country : @""]);
 };
 ```
 
