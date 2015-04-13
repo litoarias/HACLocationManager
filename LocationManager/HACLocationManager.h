@@ -47,7 +47,7 @@ typedef void (^HACLocationManagerErrorCallback)(NSError *);
  *
  *  @param NSDictionary of placemark
  */
-typedef void (^HACGeocodingManagerCallback)(NSDictionary *);
+typedef void (^HACGeocodingManagerCallback)(NSArray *);
 
 /**
  *  Error callback

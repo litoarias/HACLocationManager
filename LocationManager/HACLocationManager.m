@@ -240,9 +240,9 @@
             if (self.geocodingErrorBlock && (error || placemarks.count == 0)) {
                 self.geocodingErrorBlock(error);
             } else {
-                CLPlacemark *placemark = [placemarks objectAtIndex:0];
+//                CLPlacemark *placemark = [placemarks objectAtIndex:0];
                 if(self.geocodingBlock) {
-                    self.geocodingBlock([placemark.addressDictionary mutableCopy]);
+                    self.geocodingBlock(placemarks);
                 }
             }
         }];

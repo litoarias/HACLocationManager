@@ -230,9 +230,23 @@
     
     [locationManager GeocodingQuery];
     
-    locationManager.geocodingBlock = ^(NSDictionary *placemark){
+    locationManager.geocodingBlock = ^(NSArray *placemarks){
         
-        weakSelf.section_1 = (NSArray *)[placemark valueForKey:@"FormattedAddressLines"];
+        CLPlacemark *placemark = (CLPlacemark *)placemarks[0];
+        NSLog(@"%@",[NSString stringWithFormat:@"%@ %@\n%@ %@\n%@\n%@",
+                     
+                     placemark.subThoroughfare ? placemark.subThoroughfare : @"",
+                     placemark.thoroughfare ? placemark.thoroughfare : @"",
+                     placemark.postalCode ? placemark.postalCode : @"",
+                     placemark.locality ? placemark.locality : @"",
+                     placemark.administrativeArea ? placemark.administrativeArea : @"",
+                     placemark.country ? placemark.country : @""]);
+        
+        weakSelf.section_1 = @[placemark.subThoroughfare ? placemark.subThoroughfare : @"",placemark.thoroughfare ? placemark.thoroughfare : @"",
+                               placemark.postalCode ? placemark.postalCode : @"",
+                               placemark.locality ? placemark.locality : @"",
+                               placemark.administrativeArea ? placemark.administrativeArea : @"",
+                               placemark.country ? placemark.country : @""];
         
         [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
