@@ -369,12 +369,12 @@
 
 
 
--(void) DistanceBetweenTwoPointsWithUserLat:(float)latUser
-                                    lngUser:(float)lngUser
-                                    latDest:(float)latDest
-                                    lngDest:(float)lngDest
-                               transporType:(NSString *)transportType
-                          onCompletionBlock:(DistanceCompletionBlock)onCompletion{
+-(void) RoutesBetweenTwoPointsWithUserLat:(float)latUser
+                                  lngUser:(float)lngUser
+                                  latDest:(float)latDest
+                                  lngDest:(float)lngDest
+                             transporType:(NSString *)transportType
+                        onCompletionBlock:(DistanceCompletionBlock)onCompletion{
     
     MKPlacemark *source = [[MKPlacemark   alloc]initWithCoordinate:CLLocationCoordinate2DMake(latUser, lngUser)   addressDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"", nil] ];
     MKMapItem *srcMapItem = [[MKMapItem alloc]initWithPlacemark:source];
@@ -401,8 +401,8 @@
     
     [direction calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         
-//        MKRoute * rou = [[response routes]objectAtIndex:0];
-//        NSLog(@"%@",[self stringFromInterval:rou.expectedTravelTime]);
+        //        MKRoute * rou = [[response routes]objectAtIndex:0];
+        //        NSLog(@"%@",[self stringFromInterval:rou.expectedTravelTime]);
         
         onCompletion([response routes], nil);
     }];

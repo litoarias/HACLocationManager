@@ -94,7 +94,7 @@ typedef void (^DistanceCompletionBlock)(NSArray *routes, NSError *error);
 
 
 /**
- *  This method is used to request permissions location, you can use them anywhere you want, 
+ *  This method is used to request permissions location, you can use them anywhere you want,
  *  as long before requesting location.
  */
 - (void) requestAuthorizationLocation;
@@ -107,12 +107,12 @@ typedef void (^DistanceCompletionBlock)(NSArray *routes, NSError *error);
 
 - (CLLocation *) getLastSavedLocation;
 
--(void) DistanceBetweenTwoPointsWithUserLat:(float)latUser
-                                   lngUser:(float)lngUser
-                                   latDest:(float)latDest
-                                   lngDest:(float)lngDest
-                              transporType:(NSString *)transportType
-                         onCompletionBlock:(DistanceCompletionBlock)onCompletion;
+-(void) RoutesBetweenTwoPointsWithUserLat:(float)latUser
+                                  lngUser:(float)lngUser
+                                  latDest:(float)latDest
+                                  lngDest:(float)lngDest
+                             transporType:(NSString *)transportType
+                        onCompletionBlock:(DistanceCompletionBlock)onCompletion;
 
 + (id) sharedInstance;
 
