@@ -240,7 +240,7 @@
             if (self.geocodingErrorBlock && (error || placemarks.count == 0)) {
                 self.geocodingErrorBlock(error);
             } else {
-//                CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                //                CLPlacemark *placemark = [placemarks objectAtIndex:0];
                 if(self.geocodingBlock) {
                     self.geocodingBlock(placemarks);
                 }
@@ -363,5 +363,68 @@
         self.reverseGeocodingBlock(placemarks);
     }];
 }
+
+
+
+-(void) DistanceBetweenTwoPointsWithUserLat:(float)latUser
+                                    lngUser:(float)lngUser
+                                    latDest:(float)latDest
+                                    lngDest:(float)lngDest
+                               transporType:(NSString *)transportType
+                          onCompletionBlock:(DistanceCompletionBlock)onCompletion{
+    
+    MKPlacemark *source = [[MKPlacemark   alloc]initWithCoordinate:CLLocationCoordinate2DMake(latUser, lngUser)   addressDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"", nil] ];
+    MKMapItem *srcMapItem = [[MKMapItem alloc]initWithPlacemark:source];
+    [srcMapItem setName:@""];
+    
+    MKPlacemark *destination = [[MKPlacemark alloc]initWithCoordinate:CLLocationCoordinate2DMake(latDest, lngDest) addressDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"",@"", nil] ];
+    
+    MKMapItem *distMapItem = [[MKMapItem alloc]initWithPlacemark:destination];
+    [distMapItem setName:@""];
+    
+    MKDirectionsRequest *request = [[MKDirectionsRequest alloc]init];
+    [request setSource:srcMapItem];
+    [request setDestination:distMapItem];
+    
+    if ([transportType isEqualToString:automovile]) {
+        [request setTransportType:MKDirectionsTransportTypeAutomobile];
+    }else{
+        [request setTransportType:MKDirectionsTransportTypeWalking];
+    }
+    
+    MKDirections *direction = [[MKDirections alloc]initWithRequest:request];
+    
+    [direction calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
+        
+        
+        onCompletion([[[response routes]objectAtIndex:0]distance],nil);
+        
+        //        [arrRoutes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        //            MKRoute *rout = obj;
+        //
+        //            MKPolyline *line = [rout polyline];
+        //            [self.mapView addOverlay:line];
+        //
+        //            NSLog(@"Rout Name : %@",rout.name);
+        //
+        //            NSLog(@"Total Distance (in Meters) :%f",rout.distance);
+        //
+        //
+        //            NSArray *steps = [rout steps];
+        //
+        //            NSLog(@"Total Steps : %lu",(unsigned long)[steps count]);
+        //
+        //            [steps enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        //                NSLog(@"Rout Instruction : %@",[obj instructions]);
+        //
+        //                NSLog(@"Rout Distance : %f",[obj distance]);
+        //
+        //            }];
+        //        }];
+    }];
+}
+
 
 @end

@@ -66,6 +66,11 @@
     self.btnGeocoding.layer.shadowOpacity = 0.6;
     self.btnGeocoding.layer.masksToBounds = NO;
     
+    
+    
+    
+    [self realDistance];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -305,11 +310,11 @@
             
             [annotations addObject:ann];
             
-//            NSLog(@"Comunidad: %@",[thisPlacemark valueForKey:@"administrativeArea"]);// Comunidad
-//            NSLog(@"Localidad: %@",[thisPlacemark valueForKey:@"locality"]);// localidad
-//            NSLog(@"Provincia: %@",[thisPlacemark valueForKey:@"subAdministrativeArea"]);// Provincia
-//            NSLog(@"Número: %@",[thisPlacemark valueForKey:@"subThoroughfare"]);// Número
-//            NSLog(@"Calle: %@",[thisPlacemark valueForKey:@"thoroughfare"]);// Calle
+            //            NSLog(@"Comunidad: %@",[thisPlacemark valueForKey:@"administrativeArea"]);// Comunidad
+            //            NSLog(@"Localidad: %@",[thisPlacemark valueForKey:@"locality"]);// localidad
+            //            NSLog(@"Provincia: %@",[thisPlacemark valueForKey:@"subAdministrativeArea"]);// Provincia
+            //            NSLog(@"Número: %@",[thisPlacemark valueForKey:@"subThoroughfare"]);// Número
+            //            NSLog(@"Calle: %@",[thisPlacemark valueForKey:@"thoroughfare"]);// Calle
             
         }
         
@@ -318,7 +323,7 @@
         CLLocation *loc = [[CLLocation alloc] initWithLatitude:an.coordinate.latitude
                                                      longitude:an.coordinate.longitude];
         [weakSelf mapZoomWithMap:weakSelf.mapView userLocation:loc];
-       
+        
     };
     
     locationManager.reverseGeocodingErrorBlock = ^(NSError *error){
@@ -372,6 +377,26 @@
 -(void)disabledButtons{
     self.btnUSerLoc.enabled = NO;
     self.btnGeocoding.enabled = NO;
+}
+
+
+
+
+-(void)realDistance{
+    [[HACLocationManager sharedInstance]DistanceBetweenTwoPointsWithUserLat:40.4376751
+                                                                    lngUser:-3.7044201
+                                                                    latDest:40.0619721
+                                                                    lngDest:-2.1480249
+                                                               transporType:automovile
+                                                          onCompletionBlock:^(double dataReceive, NSError *error){
+        
+        if(!error){
+            NSLog(@"%f Km", dataReceive/1000);
+        }else{
+            NSLog(@"%@", [error localizedDescription]);
+        }
+    }];
+    
 }
 
 @end

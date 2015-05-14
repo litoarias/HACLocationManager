@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
 #define kDefaultTimeOut 5
 #define LAST_LOCATION @"kUserLocation"
@@ -16,6 +17,8 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 
+#define walking @"kWalking"
+#define automovile @"kAutomovile"
 
 // LOCATION -> Manages without blocks the various events on location. Updates , last update and error event.
 /**
@@ -71,6 +74,11 @@ typedef void (^HACReverseGeocodingManagerCallback)(NSArray *);
  */
 typedef void (^HACReverseGeocodingManagerErrorCallback)(NSError *);
 
+/**
+ *  Distance callBack
+ *
+ */
+typedef void (^DistanceCompletionBlock)(double distance, NSError *error);
 
 @interface HACLocationManager : NSObject <CLLocationManagerDelegate, UIAlertViewDelegate>
 
@@ -98,6 +106,13 @@ typedef void (^HACReverseGeocodingManagerErrorCallback)(NSError *);
 - (void) ReverseGeocodingQueryWithText:(NSString *)addressText;
 
 - (CLLocation *) getLastSavedLocation;
+
+-(void) DistanceBetweenTwoPointsWithUserLat:(float)latUser
+                                   lngUser:(float)lngUser
+                                   latDest:(float)latDest
+                                   lngDest:(float)lngDest
+                              transporType:(NSString *)transportType
+                         onCompletionBlock:(DistanceCompletionBlock)onCompletion;
 
 + (id) sharedInstance;
 
