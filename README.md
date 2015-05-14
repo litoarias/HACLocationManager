@@ -132,6 +132,7 @@ NSLog(@"%@",locationManager.getLastSavedLocation);
 
 ### Get the actual distance between two points and not straight line.
 You can try changing the parameters in the sample project, changing the parameters of latitude and longitude, the method - (void) realDistance; .
+The means of transport can also be chosen, walking or automovile, for default it's automovile.
 ```objective-c
 [[HACLocationManager sharedInstance]DistanceBetweenTwoPointsWithUserLat:40.4376751
                                                                     lngUser:-3.7044201
