@@ -78,7 +78,7 @@ typedef void (^HACReverseGeocodingManagerErrorCallback)(NSError *);
  *  Distance callBack
  *
  */
-typedef void (^DistanceCompletionBlock)(double distance, NSError *error);
+typedef void (^DistanceCompletionBlock)(NSArray *routes, NSError *error);
 
 @interface HACLocationManager : NSObject <CLLocationManagerDelegate, UIAlertViewDelegate>
 

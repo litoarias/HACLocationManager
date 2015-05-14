@@ -388,10 +388,36 @@
                                                                     latDest:40.0619721
                                                                     lngDest:-2.1480249
                                                                transporType:automovile
-                                                          onCompletionBlock:^(double dataReceive, NSError *error){
+                                                          onCompletionBlock:^(NSArray * routes, NSError *error){
         
         if(!error){
-            NSLog(@"%f Km", dataReceive/1000);
+           
+            [routes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                
+                MKRoute *route = obj;
+                
+                MKPolyline *line = [route polyline];
+                [self.mapView addOverlay:line];
+                
+                NSLog(@"Rout Name : %@",route.name);
+                
+                NSLog(@"Total Distance (in Meters) :%f",route.distance);
+                
+                
+                NSArray *steps = [route steps];
+                
+                NSLog(@"Total Steps : %lu",(unsigned long)[steps count]);
+                
+                [steps enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    
+                    NSLog(@"Rout Instruction : %@",[obj instructions]);
+                    
+                    NSLog(@"Rout Distance : %f",[obj distance]);
+                    
+                }];
+            }];
+
+            
         }else{
             NSLog(@"%@", [error localizedDescription]);
         }
