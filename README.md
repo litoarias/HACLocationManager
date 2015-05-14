@@ -130,6 +130,25 @@ You can also get the latest location of the user stored persistently for those c
 NSLog(@"%@",locationManager.getLastSavedLocation);
 ```
 
+### Get the actual distance between two points and not straight line.
+You can try changing the parameters in the sample project, changing the parameters of latitude and longitude, the method - (void) realDistance; .
+```objective-c
+[[HACLocationManager sharedInstance]DistanceBetweenTwoPointsWithUserLat:40.4376751
+                                                                    lngUser:-3.7044201
+                                                                    latDest:40.0619721
+                                                                    lngDest:-2.1480249
+                                                               transporType:automovile
+                                                          onCompletionBlock:^(double dataReceive, NSError *error){
+        
+        if(!error){
+            NSLog(@"%f Km", dataReceive/1000);
+        }else{
+            NSLog(@"%@", [error localizedDescription]);
+        }
+    }];
+```
+
+
 Enjoy :D
 
 ## Contributing
