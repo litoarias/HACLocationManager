@@ -388,8 +388,10 @@
     
     if ([transportType isEqualToString:automovile]) {
         [request setTransportType:MKDirectionsTransportTypeAutomobile];
-    }else{
+    }else if ([transportType isEqualToString:walking]){
         [request setTransportType:MKDirectionsTransportTypeWalking];
+    }else{
+        [request setTransportType:MKDirectionsTransportTypeAutomobile];
     }
     
     MKDirections *direction = [[MKDirections alloc]initWithRequest:request];
