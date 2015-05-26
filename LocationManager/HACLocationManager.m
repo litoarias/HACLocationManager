@@ -8,7 +8,11 @@
 
 #import "HACLocationManager.h"
 
-
+typedef enum {
+    kHACQueryLocation = 0,
+    kHACQueryGeocoding,
+    kHACQueryReverseGeocoding
+} HACLastQuery;
 
 @implementation HACLocationManager {
     BOOL _stopLocation;
@@ -16,6 +20,8 @@
     BOOL _isLocation;
     NSTimer *_queryingTimer;
     CLLocation *_location;
+    int _lastTypeAction;
+    NSString *_reverseGeocodingLastText;
 }
 
 @synthesize timeoutUpdating = _timeoutUpdating;
@@ -60,6 +66,24 @@
     }
 }
 
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    switch (_lastTypeAction) {
+        case kHACQueryLocation:
+            [self LocationQuery];
+            break;
+        case kHACQueryGeocoding:
+            [self GeocodingQuery];
+            break;
+        case kHACQueryReverseGeocoding:
+            [self ReverseGeocodingQueryWithText:_reverseGeocodingLastText];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 /**
  *  < iOS 8
  *
@@ -92,12 +116,13 @@
 -(void) LocationQuery{
     [self startUpdatingLocation];
     _isLocation=YES;
+    _lastTypeAction = kHACQueryLocation;
 }
 
 -(void) GeocodingQuery{
     [self startUpdatingLocation];
     _isGeocoding=YES;
-    
+    _lastTypeAction = kHACQueryGeocoding;
 }
 
 - (CLLocation *) getLastSavedLocation{
@@ -340,6 +365,10 @@
 
 -(void) ReverseGeocodingQueryWithText:(NSString *)addressText
 {
+    _reverseGeocodingLastText = addressText;
+    
+    _lastTypeAction = kHACQueryReverseGeocoding;
+    
     CLCircularRegion *currentRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(-33.861506931797535,151.21294498443604)
                                                                         radius:25000
                                                                     identifier:@"NEARBY"];
