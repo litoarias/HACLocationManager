@@ -61,8 +61,19 @@ typedef enum {
 # pragma mark - CLLocationManagerDelegate
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    if(self.locationErrorBlock){
-        self.locationErrorBlock(error);
+    switch([error code])
+    {
+        case kCLErrorNetwork:
+        case kCLErrorDeferredDistanceFiltered:
+        case kCLErrorDenied:{
+            if(self.locationErrorBlock){
+                self.locationErrorBlock(error);
+            }
+        }
+            break;
+        case kCLErrorLocationUnknown:{
+            NSLog(@"kCLErrorLocationUnknown");
+        }break;
     }
 }
 
