@@ -61,23 +61,8 @@ typedef enum {
 # pragma mark - CLLocationManagerDelegate
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    switch([error code])
-    {
-        case kCLErrorNetwork: // general, network-related error -> please check your network connection or that you are not in airplane mode
-        case kCLErrorDenied: // user has denied to use current Location
-        {
-            if(self.locationErrorBlock){
-                self.locationErrorBlock(error);
-            }
-        }
-            break;
-        default:
-        {
-            NSLog(@"Error -> unknown network error : %@", [error localizedDescription]);
-//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"unknown network error" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [alert show];
-        }
-            break;
+    if(self.locationErrorBlock){
+        self.locationErrorBlock(error);
     }
 }
 
