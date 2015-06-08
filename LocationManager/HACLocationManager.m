@@ -89,7 +89,6 @@ typedef enum {
         case kHACQueryReverseGeocoding:
             [self ReverseGeocodingQueryWithText:_reverseGeocodingLastText];
             break;
-            
         default:
             break;
     }
