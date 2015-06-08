@@ -11,10 +11,10 @@ Pod::Spec.new do |s|
   s.license          = { :type => "GNU", :file => "LICENSE" }
   s.authors          = { "litoarias" => "lito.arias.cervero@gmail.com" }
   s.social_media_url = 'https://github.com/litoarias/HACLocationManager'
-  s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/litoarias/HACLocationManager.git", :tag => “1.0.3” }
-  s.source_files  = "LocationManager"
-  s.requires_arc = true
+  s.platform         = :ios, "7.0"
+  s.source           = { :git => "https://github.com/litoarias/HACLocationManager.git", :tag => “1.0.3” }
+  s.source_files     = "LocationManager"
+  s.requires_arc     = true
 
   s.ios.frameworks = 'CoreLocation','MapKit'
 
