@@ -116,7 +116,7 @@ typedef enum {
 # pragma mark - Public Methods
 
 - (void) requestAuthorizationLocation{
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && [self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         [_locationManager requestWhenInUseAuthorization];
     }
     [self.locationManager startUpdatingLocation];
