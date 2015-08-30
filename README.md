@@ -1,12 +1,12 @@
 # [![Logo](https://github.com/litoarias/HACLocationManager/blob/master/ExampleApp/github.png)](#)
 
+<img src="https://img.shields.io/twitter/url/https/github.com/litoarias/HACLocationManager.svg?style=social"><br>
+
 <img src="https://img.shields.io/github/issues/litoarias/HACLocationManager.svg?style=flat-square">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square">
 <img src="https://img.shields.io/cocoapods/v/HACLocationManager.svg?style=flat-square">
-<img src="https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square">
-<img src="https://img.shields.io/npm/dm/localeval.svg?style=flat-square">
-<br>
-<img src="https://img.shields.io/twitter/url/https/github.com/litoarias/HACLocationManager.svg?style=social">
+<img src="https://img.shields.io/npm/dm/HACLocationManager.svg?style=flat-square">
+
 
 HACLocationManager is written in Objective-C, very easy to use and effective class.  
 Requests are made using blocks. Its syntax is very comfortable and intuitive.
