@@ -1,6 +1,6 @@
 # [![Logo](https://github.com/litoarias/HACLocationManager/blob/master/ExampleApp/github.png)](#)
 
-<img src="https://img.shields.io/github/issues/litoarias/HACLocationManager.svg">
+<img src="https://img.shields.io/github/issues/litoarias/HACLocationManager.svg?style=flat-square">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square">
 <img src="https://img.shields.io/cocoapods/v/HACLocationManager.svg?style=flat-square">
 <img src="https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square">
