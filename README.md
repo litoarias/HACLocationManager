@@ -1,7 +1,10 @@
 # [![Logo](https://github.com/litoarias/HACLocationManager/blob/master/ExampleApp/github.png)](#)
 
+<img src="https://img.shields.io/github/issues/litoarias/HACLocationManager.svg">
+<img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square">
 <img src="https://img.shields.io/cocoapods/v/HACLocationManager.svg?style=flat-square">
 <img src="https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square">
+<img src="https://img.shields.io/npm/dm/localeval.svg?style=flat-square">
 <br>
 <img src="https://img.shields.io/twitter/url/https/github.com/litoarias/HACLocationManager.svg?style=social">
 
