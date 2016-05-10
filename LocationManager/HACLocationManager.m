@@ -116,12 +116,17 @@ typedef enum {
 # pragma mark - Public Methods
 
 - (void) requestAuthorizationLocation{
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && [self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [_locationManager requestWhenInUseAuthorization];
-    }
-    [self.locationManager startUpdatingLocation];
-    [self.locationManager stopUpdatingLocation];
+	if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && [self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
+	{
+		[_locationManager requestWhenInUseAuthorization];
+	}
+	else
+	{
+		[self.locationManager startUpdatingLocation];
+		[self.locationManager stopUpdatingLocation];
+	}
 }
+
 
 -(void) LocationQuery{
     [self startUpdatingLocation];
@@ -162,10 +167,13 @@ typedef enum {
         {
             if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
             {
-                [self.locationManager requestAlwaysAuthorization];
-            }
+				[self.locationManager requestAlwaysAuthorization];
+			}
+			else
+			{
+				[self.locationManager startUpdatingLocation];
+			}
         }
-        [self.locationManager startUpdatingLocation];
         [self startTimer];
     }else{
         [self dispatchAlertCheckingVersionSystem];
