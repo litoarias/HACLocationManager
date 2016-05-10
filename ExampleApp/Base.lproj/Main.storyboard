@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -19,13 +19,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FPa-1l-cId">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="294"/>
-                                <connections>
-                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="CbH-hc-3iT"/>
-                                </connections>
+                                <rect key="frame" x="4" y="0.0" width="592" height="294"/>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8s1-8f-PdP">
-                                <rect key="frame" x="0.0" y="359" width="600" height="241"/>
+                                <rect key="frame" x="4" y="359" width="592" height="241"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="vXZ-lx-hvc" id="OKh-qd-231"/>
@@ -33,7 +30,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Fc-Qu-UAD">
-                                <rect key="frame" x="10" y="315" width="286" height="30"/>
+                                <rect key="frame" x="14" y="315" width="282" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="QTc-dq-Giy"/>
@@ -46,7 +43,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwi-RA-uYK">
-                                <rect key="frame" x="304" y="315" width="286" height="30"/>
+                                <rect key="frame" x="304" y="315" width="282" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Geocoding">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -56,7 +53,7 @@
                                 </connections>
                             </button>
                             <searchBar contentMode="redraw" placeholder="Ex: 1755 Embarcadero Road Palo Alto, CA 94303" translatesAutoresizingMaskIntoConstraints="NO" id="8bd-M5-gg9">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <rect key="frame" x="4" y="20" width="592" height="44"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="ZMu-xZ-7ix"/>
@@ -90,7 +87,6 @@
                     <connections>
                         <outlet property="btnGeocoding" destination="xwi-RA-uYK" id="5zJ-9V-29C"/>
                         <outlet property="btnUSerLoc" destination="3Fc-Qu-UAD" id="aOv-mC-msI"/>
-                        <outlet property="mapView" destination="FPa-1l-cId" id="4mZ-tA-ESD"/>
                         <outlet property="tableView" destination="8s1-8f-PdP" id="EFU-zO-Y8X"/>
                     </connections>
                 </viewController>
