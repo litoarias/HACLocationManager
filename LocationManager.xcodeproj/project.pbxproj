@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4110F7141AC73A00007B0ACB /* github.png in Resources */ = {isa = PBXBuildFile; fileRef = 4110F7131AC73A00007B0ACB /* github.png */; };
 		4110F7161AC73FA5007B0ACB /* Info_plist.png in Resources */ = {isa = PBXBuildFile; fileRef = 4110F7151AC73FA5007B0ACB /* Info_plist.png */; };
+		4113D8D01DC4CEC700F78247 /* HACLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4113D8CE1DC4CEC700F78247 /* HACLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4113D8D31DC4CEC700F78247 /* HACLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4113D8CC1DC4CEC700F78247 /* HACLocationManager.framework */; };
+		4113D8D41DC4CEC700F78247 /* HACLocationManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4113D8CC1DC4CEC700F78247 /* HACLocationManager.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4114B5E01AD09746004EBB93 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4114B5DF1AD09746004EBB93 /* Annotation.m */; };
 		416AB4751AC34F4C0028DC4F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 416AB4741AC34F4C0028DC4F /* CoreLocation.framework */; };
 		E3107B841AC2D57B007577F3 /* LocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3107B831AC2D57B007577F3 /* LocationManagerTests.m */; };
@@ -23,6 +26,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4113D8D11DC4CEC700F78247 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E3107B5C1AC2D57B007577F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4113D8CB1DC4CEC700F78247;
+			remoteInfo = HACLocationManager;
+		};
 		E3107B7E1AC2D57B007577F3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E3107B5C1AC2D57B007577F3 /* Project object */;
@@ -32,9 +42,26 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4113D8D81DC4CEC700F78247 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4113D8D41DC4CEC700F78247 /* HACLocationManager.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4110F7131AC73A00007B0ACB /* github.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = github.png; sourceTree = "<group>"; };
 		4110F7151AC73FA5007B0ACB /* Info_plist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Info_plist.png; sourceTree = "<group>"; };
+		4113D8CC1DC4CEC700F78247 /* HACLocationManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HACLocationManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4113D8CE1DC4CEC700F78247 /* HACLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HACLocationManager.h; sourceTree = "<group>"; };
+		4113D8CF1DC4CEC700F78247 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4114B5DE1AD09746004EBB93 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
 		4114B5DF1AD09746004EBB93 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		416AB4741AC34F4C0028DC4F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -57,12 +84,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4113D8C81DC4CEC700F78247 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E3107B611AC2D57B007577F3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				E39991281AC3DF59001AB584 /* MapKit.framework in Frameworks */,
 				416AB4751AC34F4C0028DC4F /* CoreLocation.framework in Frameworks */,
+				4113D8D31DC4CEC700F78247 /* HACLocationManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,12 +111,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4113D8CD1DC4CEC700F78247 /* HACLocationManager */ = {
+			isa = PBXGroup;
+			children = (
+				4113D8CE1DC4CEC700F78247 /* HACLocationManager.h */,
+				4113D8CF1DC4CEC700F78247 /* Info.plist */,
+			);
+			path = HACLocationManager;
+			sourceTree = "<group>";
+		};
 		E3107B5B1AC2D57B007577F3 = {
 			isa = PBXGroup;
 			children = (
 				E3107B8D1AC2D694007577F3 /* ExampleApp */,
 				E3107B661AC2D57B007577F3 /* LocationManager */,
 				E3107B801AC2D57B007577F3 /* LocationManagerTests */,
+				4113D8CD1DC4CEC700F78247 /* HACLocationManager */,
 				E3107B651AC2D57B007577F3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,6 +136,7 @@
 			children = (
 				E3107B641AC2D57B007577F3 /* LocationManager.app */,
 				E3107B7D1AC2D57B007577F3 /* LocationManagerTests.xctest */,
+				4113D8CC1DC4CEC700F78247 /* HACLocationManager.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,7 +199,36 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		4113D8C91DC4CEC700F78247 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4113D8D01DC4CEC700F78247 /* HACLocationManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		4113D8CB1DC4CEC700F78247 /* HACLocationManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4113D8D71DC4CEC700F78247 /* Build configuration list for PBXNativeTarget "HACLocationManager" */;
+			buildPhases = (
+				4113D8C71DC4CEC700F78247 /* Sources */,
+				4113D8C81DC4CEC700F78247 /* Frameworks */,
+				4113D8C91DC4CEC700F78247 /* Headers */,
+				4113D8CA1DC4CEC700F78247 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HACLocationManager;
+			productName = HACLocationManager;
+			productReference = 4113D8CC1DC4CEC700F78247 /* HACLocationManager.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		E3107B631AC2D57B007577F3 /* LocationManager */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E3107B871AC2D57B007577F3 /* Build configuration list for PBXNativeTarget "LocationManager" */;
@@ -161,10 +236,12 @@
 				E3107B601AC2D57B007577F3 /* Sources */,
 				E3107B611AC2D57B007577F3 /* Frameworks */,
 				E3107B621AC2D57B007577F3 /* Resources */,
+				4113D8D81DC4CEC700F78247 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4113D8D21DC4CEC700F78247 /* PBXTargetDependency */,
 			);
 			name = LocationManager;
 			productName = LocationManager;
@@ -198,6 +275,10 @@
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Hipolito Arias";
 				TargetAttributes = {
+					4113D8CB1DC4CEC700F78247 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
 					E3107B631AC2D57B007577F3 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 4U72882THN;
@@ -223,11 +304,19 @@
 			targets = (
 				E3107B631AC2D57B007577F3 /* LocationManager */,
 				E3107B7C1AC2D57B007577F3 /* LocationManagerTests */,
+				4113D8CB1DC4CEC700F78247 /* HACLocationManager */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4113D8CA1DC4CEC700F78247 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E3107B621AC2D57B007577F3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -250,6 +339,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4113D8C71DC4CEC700F78247 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E3107B601AC2D57B007577F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -273,6 +369,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4113D8D21DC4CEC700F78247 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4113D8CB1DC4CEC700F78247 /* HACLocationManager */;
+			targetProxy = 4113D8D11DC4CEC700F78247 /* PBXContainerItemProxy */;
+		};
 		E3107B7F1AC2D57B007577F3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E3107B631AC2D57B007577F3 /* LocationManager */;
@@ -302,6 +403,66 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4113D8D51DC4CEC700F78247 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = HACLocationManager/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = MasterApps.HACLocationManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		4113D8D61DC4CEC700F78247 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = HACLocationManager/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = MasterApps.HACLocationManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		E3107B851AC2D57B007577F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -446,6 +607,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4113D8D71DC4CEC700F78247 /* Build configuration list for PBXNativeTarget "HACLocationManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4113D8D51DC4CEC700F78247 /* Debug */,
+				4113D8D61DC4CEC700F78247 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		E3107B5F1AC2D57B007577F3 /* Build configuration list for PBXProject "LocationManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
