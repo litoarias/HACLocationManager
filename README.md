@@ -24,6 +24,10 @@ This class is not for use as GPS, only for obtain user location in any moment an
 
     	pod 'HACLocationManager'
 
+####Carthage:
+        github "litoarias/HACLocationManager"
+
+
 ####Manual install:
 - Copy `HACLocationManager.h` and `HACLocationManager.m` to your project
 - Manual install [HACLocationManager](https://github.com/litoarias/HACLocationManager/#manual-install)
