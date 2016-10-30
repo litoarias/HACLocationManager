@@ -174,6 +174,7 @@ typedef enum {
 				[self.locationManager startUpdatingLocation];
 			}
         }
+        [self.locationManager startUpdatingLocation];
         [self startTimer];
     }else{
         [self dispatchAlertCheckingVersionSystem];
