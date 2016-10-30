@@ -73,8 +73,8 @@
 		E3107B7D1AC2D57B007577F3 /* LocationManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocationManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3107B821AC2D57B007577F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3107B831AC2D57B007577F3 /* LocationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationManagerTests.m; sourceTree = "<group>"; };
-		E3107B8E1AC2D6F7007577F3 /* HACLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HACLocationManager.h; path = ../LocationManager/HACLocationManager.h; sourceTree = "<group>"; };
-		E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HACLocationManager.m; path = ../LocationManager/HACLocationManager.m; sourceTree = "<group>"; };
+		E3107B8E1AC2D6F7007577F3 /* HACLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HACLocationManager.h; sourceTree = "<group>"; };
+		E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HACLocationManager.m; sourceTree = "<group>"; };
 		E3107B911AC2DB86007577F3 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E3107B921AC2DB86007577F3 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E3107B951AC2DB86007577F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
@@ -120,8 +120,6 @@
 		4113D8CD1DC4CEC700F78247 /* HACLocationManager */ = {
 			isa = PBXGroup;
 			children = (
-				E3107B8E1AC2D6F7007577F3 /* HACLocationManager.h */,
-				E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */,
 				4113D8CE1DC4CEC700F78247 /* HACLocationManager.h */,
 				4113D8CF1DC4CEC700F78247 /* Info.plist */,
 			);
@@ -152,6 +150,8 @@
 		E3107B661AC2D57B007577F3 /* LocationManager */ = {
 			isa = PBXGroup;
 			children = (
+				E3107B8E1AC2D6F7007577F3 /* HACLocationManager.h */,
+				E3107B8F1AC2D6F7007577F3 /* HACLocationManager.m */,
 				E39991271AC3DF59001AB584 /* MapKit.framework */,
 				416AB4741AC34F4C0028DC4F /* CoreLocation.framework */,
 			);
