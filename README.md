@@ -12,6 +12,16 @@ Requests are made using blocks. Its syntax is very comfortable and intuitive.
 Use singleton design pattern and its compatibility is complete with iOS8 or higher.
 This class is not for use as GPS, only for obtain user location in any moment and get geocoding and reverse geocoding.
 
+##Features
+> - [x] [Cocoapods](https://cocoapods.org/) support
+> - [x] [Carthage](https://github.com/Carthage/Carthage) support
+> - [x] *Request permissions method*
+> - [x] User location (with blocks)
+> - [x] Geocoding (with blocks)
+> - [x] Reverse geocoding (with blocks)
+> - [x] Route guidelines between two points (with blocks)
+
+
 ##Requirements and Dependencies
 - iOS >= 8.0
 - ARC enabled
@@ -35,8 +45,7 @@ This class is not for use as GPS, only for obtain user location in any moment an
 
 ### Requesting Permission to Access Location Services
 
-#### iOS 7
-For iOS 7, it is recommended that you provide a description for how your app uses location services by setting a string for the key [`NSLocationUsageDescription`](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW27) in your app's `Info.plist` file.
+From iOS 7, it is requiered that you provide a description for how your app uses location services by setting a string for the key [`NSLocationUsageDescription`](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW27) in your app's `Info.plist` file.
 
 #### iOS 8
 Since iOS 8 it is required to add `NSLocationWhenInUseUsageDescription` key to your `Info.plist` file. Value for this key will be a description of UIAlertView presented to user while asking for location  permission. See [Apple documentation](https://developer.apple.com/library/ios/documentation/corelocation/reference/CLLocationManager_Class/index.html#//apple_ref/occ/instm/CLLocationManager/requestWhenInUseAuthorization) for more info.
